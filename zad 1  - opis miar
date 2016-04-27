@@ -1,0 +1,27 @@
+####### MIARY POŁOŻENIA ########
+
+1) ŚREDNIA ARYTMETYCZNA
+
+2) KWANTYLE, KWARTYLE, MEDIANA
+
+####### MIARY ZRÓŻNICOWANIA ########
+
+1) ROZSTĘP WYNIKÓW W PRÓBIE (stanowi różnicę między pierwszą i ostatnią statystyką pozycyjną, różnicę między górnym i dolnym kwartylem nazywa się rozstępem międzykwartylowym)
+
+2a) WARIANCJA Z PRÓBY NIEOBCIĄŻONA
+
+3a) ODCHYLENIE STANDARDOWE NIEOBCIĄŻONE
+
+2b) WARIANCJA OBCIĄŻONA
+
+3b) ODCHYLENIE STANDARDOWE OBCIĄŻONE
+
+4) WSPÓŁCZYNNK ZMIENNOŚCI - stanowi odniesienie wartości odchylenia standardowego do średniego poziomu cechy
+
+####### MIARY ASYMETRII ########
+
+1) SKOŚNOŚĆ - przybiera wartości zawarte w przedziale <-1,1>, wartości 0 są zarezerwowane dla rozkładu symetrycznego
+
+####### MIARY KONCENTRACJI ########
+
+1) KURTOZA - miara skupienia obserwacji wokół średniej, dla rozkładu normalnego kurtoza wynosi 3
