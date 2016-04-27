@@ -47,7 +47,7 @@ wariancja+
 odchylenie standardowe+
 rozstęp+
 odchylenie ćwiartkowe+
-WSPÓŁCZYNNIKI ZMIENNOŚCI
+WSPÓŁCZYNNIKI ZMIENNOŚCI+
 
 miary asymetrii:
 WSKAŹNIKI ASYMETRII
