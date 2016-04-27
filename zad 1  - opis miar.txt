@@ -41,8 +41,8 @@ MODA+
 KWARTYLE+
 
 miary zróznicowania:
-odchylenie przeciętne OD ŚREDNIEJ
-odchylenie przeciętne OD MEDIANY
+odchylenie przeciętne OD ŚREDNIEJ+
+odchylenie przeciętne OD MEDIANY+
 wariancja+
 odchylenie standardowe+
 rozstęp+
@@ -50,9 +50,9 @@ odchylenie ćwiartkowe+
 WSPÓŁCZYNNIKI ZMIENNOŚCI+
 
 miary asymetrii:
-WSKAŹNIKI ASYMETRII
-WSPÓŁCZYNNIKI ASYMETRII
+WSPÓŁCZYNNIKI ASYMETRII+
 
 miary koncentracji/SKOŚNOŚCI:
-Kurtoza
-Eksces
+Skośność
+Kurtoza+
+Eksces+
