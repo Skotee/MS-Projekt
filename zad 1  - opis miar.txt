@@ -31,18 +31,16 @@ _________________________________________________________
 zad1.
 miary przeciętne :
 Średnia arytmetyczna+
-Średnia harmoniczna?
-Średnia geometryczna?
 mediana+
 MODA+
 KWARTYLE+
 
 miary zróznicowania:
-odchylenie przeciętne OD PRZECIĘTNEJ
+odchylenie przeciętne OD ŚREDNIEJ
 odchylenie przeciętne OD MEDIANY
 wariancja+
 odchylenie standardowe+
-rozstęp
+rozstęp+
 odchylenie ćwiartkowe
 WSPÓŁCZYNNIKI ZMIENNOŚCI
 
