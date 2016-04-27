@@ -1,4 +1,4 @@
-####### MIARY POŁOŻENIA ########
+﻿####### MIARY POŁOŻENIA ########
 
 1) ŚREDNIA ARYTMETYCZNA
 
@@ -25,3 +25,31 @@
 ####### MIARY KONCENTRACJI ########
 
 1) KURTOZA - miara skupienia obserwacji wokół średniej, dla rozkładu normalnego kurtoza wynosi 3
+
+_________________________________________________________
+
+zad1.
+miary przeciętne :
+Średnia arytmetyczna+
+Średnia harmoniczna?
+Średnia geometryczna?
+mediana+
+MODA+
+KWARTYLE+
+
+miary zróznicowania:
+odchylenie przeciętne OD PRZECIĘTNEJ
+odchylenie przeciętne OD MEDIANY
+wariancja+
+odchylenie standardowe+
+rozstęp
+odchylenie ćwiartkowe
+WSPÓŁCZYNNIKI ZMIENNOŚCI
+
+miary asymetrii:
+WSKAŹNIKI ASYMETRII
+WSPÓŁCZYNNIKI ASYMETRII
+
+miary koncentracji/SKOŚNOŚCI:
+Kurtoza
+Eksces
