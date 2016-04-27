@@ -46,7 +46,7 @@ odchylenie przeciętne OD MEDIANY
 wariancja+
 odchylenie standardowe+
 rozstęp+
-odchylenie ćwiartkowe
+odchylenie ćwiartkowe+
 WSPÓŁCZYNNIKI ZMIENNOŚCI
 
 miary asymetrii:
