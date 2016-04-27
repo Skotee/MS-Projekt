@@ -1,4 +1,5 @@
-moda <- function(vec) {
+moda <- function(vec)
+{
   ux <- unique(vec)
   return(ux[which.max(tabulate(match(vec, ux)))])
 }
@@ -60,6 +61,13 @@ wspolczynnik_asymetrii <- function(vec, sr, odch)
   return(k)  
 }
 
+wspolczynnik_skosnosci <- function(vec, sr, odch)
+{
+  ile <- length(vec)
+  s <- (ile * sum((vec - sr)^3)) / ((ile - 1) * (ile - 2) * (odch)^4)
+  return(s)
+}
+
 dane_sklepu_1 <- read.table("sklep1.txt", header=F, dec=",")
 dane_sklepu_2 <- read.table("sklep2.txt", header=F, dec=",")
 
@@ -100,6 +108,7 @@ cat("Dominanta: ", sklep1_moda)
 cat("Rozstep: ", rozstep(dane_sklepu1_vec))
 cat("Wspolczynnik zmiennosci: ", wspolczynnik_zmiennosci(sklep1_sr, sklep1_odch), "%")
 cat("Wspolczynnik asymetrii: ", wspolczynnik_asymetrii(dane_sklepu1_vec, sklep1_sr, sklep1_odch))
+cat("Wspolczynnik skosnosci: ", wspolczynnik_skosnosci(dane_sklepu1_vec, sklep1_sr, sklep1_odch))
 cat("Kurtoza: ", sklep1_kurt)
 cat("Eksces: ", eksces(sklep1_kurt))
 
@@ -117,5 +126,6 @@ cat("Dominanta: ", sklep2_moda)
 cat("Rozstep: ", rozstep(dane_sklepu2_vec))
 cat("Wspolczynnik zmiennosci: ", wspolczynnik_zmiennosci(sklep2_sr, sklep2_odch), "%")
 cat("Wspolczynnik asymetrii: ", wspolczynnik_asymetrii(dane_sklepu2_vec, sklep2_sr, sklep2_odch))
+cat("Wspolczynnik skosnosci: ", wspolczynnik_skosnosci(dane_sklepu2_vec, sklep2_sr, sklep2_odch))
 cat("Kurtoza: ", sklep2_kurt)
 cat("Eksces: ", eksces(sklep2_kurt))
