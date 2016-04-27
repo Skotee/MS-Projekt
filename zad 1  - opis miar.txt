@@ -4,6 +4,8 @@
 
 2) KWANTYLE, KWARTYLE, MEDIANA
 
+3) MODA
+
 ####### MIARY ZRÓŻNICOWANIA ########
 
 1) ROZSTĘP WYNIKÓW W PRÓBIE (stanowi różnicę między pierwszą i ostatnią statystyką pozycyjną, różnicę między górnym i dolnym kwartylem nazywa się rozstępem międzykwartylowym)
@@ -18,6 +20,8 @@
 
 4) WSPÓŁCZYNNK ZMIENNOŚCI - stanowi odniesienie wartości odchylenia standardowego do średniego poziomu cechy
 
+5) ODCHYLENIE ĆWIARTKOWE
+
 ####### MIARY ASYMETRII ########
 
 1) SKOŚNOŚĆ - przybiera wartości zawarte w przedziale <-1,1>, wartości 0 są zarezerwowane dla rozkładu symetrycznego
@@ -26,6 +30,7 @@
 
 1) KURTOZA - miara skupienia obserwacji wokół średniej, dla rozkładu normalnego kurtoza wynosi 3
 
+2) EKSCES
 _________________________________________________________
 
 zad1.
