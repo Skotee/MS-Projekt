@@ -21,11 +21,6 @@ wspolczynnik_zmiennosci <- function(odch, sred)
   return(v)
 }
 
-wsk_asymetrii<- function(sr,moda)
-{
-  result<- sr-moda
-  return(result)
-}
 
 dane_sklepu_1 <- read.table("sklep1.txt", header=F, dec=",")
 dane_sklepu_2 <- read.table("sklep2.txt", header=F, dec=",")
@@ -40,11 +35,13 @@ sort(dane_sklepu2_vec)
 sklep1_sr <- mean(dane_sklepu1_vec)
 sklep1_q1 <- quantile(dane_sklepu1_vec, 0.25)
 sklep1_q3 <- quantile(dane_sklepu1_vec, 0.75)
+sklep1_moda<- moda(dane_sklepu1_vec)
 sklep1_odch <- sd(dane_sklepu1_vec)
 
 sklep2_sr <- mean(dane_sklepu2_vec)
 sklep2_q1<-quantile(dane_sklepu2_vec, 0.25)
 sklep2_q3<-quantile(dane_sklepu2_vec, 0.75)
+sklep2_moda<- moda(dane_sklepu2_vec)
 sklep2_odch <- sd(dane_sklepu2_vec)
 
 cat("Srednia sklepu 1: ", sklep1_sr)
@@ -54,7 +51,7 @@ cat("Kwartyl 0.75 sklepu 1:", sklep1_q3)
 cat("Odchylenie standardowe nieobciazone sklepu 1: ", sklep1_odch)
 cat("Odchylenie cwiartkowe sklepu 1: ", cwiartkowe(sklep1_q1,sklep1_q3))
 cat("Wariancja nieobciazona sklepu 1: ", var(dane_sklepu1_vec))
-cat("Dominanta sklepu 1: ", moda(dane_sklepu1_vec))
+cat("Dominanta sklepu 1: ", sklep1_moda)
 cat("Rozstep sklepu 1: ", rozstep(dane_sklepu1_vec))
 cat("Wspolczynnik zmiennosci sklepu 1: ", wspolczynnik_zmiennosci(sklep1_sr, sklep1_odch), "%")
 
@@ -66,6 +63,6 @@ cat("Kwartyl 0.75 sklepu 2:", sklep2_q3)
 cat("Odchylenie standardowe nieobciazone sklepu 2: ", sklep2_odch)
 cat("Odchylenie cwiartkowe sklepu 2: ", cwiartkowe(sklep2_q1,sklep2_q3))
 cat("Wariancja nieobciazona sklepu 2: ", var(dane_sklepu2_vec))
-cat("Dominanta sklepu 2: ", moda(dane_sklepu2_vec))
+cat("Dominanta sklepu 2: ", sklep2_moda)
 cat("Rozstep sklepu 2: ", rozstep(dane_sklepu2_vec))
 cat("Wspolczynnik zmiennosci sklepu 2: ", wspolczynnik_zmiennosci(sklep2_sr, sklep2_odch), "%")
