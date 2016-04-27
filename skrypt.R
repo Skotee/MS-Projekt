@@ -11,8 +11,10 @@ sort(dane_sklepu2_vec)
 cat("Œrednia sklepu 1: ", mean(dane_sklepu1_vec))
 cat("Mediana sklepu 1: ", median(dane_sklepu1_vec))
 cat("Odchylenie standardowe sklepu 1: ", sd(dane_sklepu1_vec))
+cat("Wariancja sklepu 1: ", var(dane_sklepu1_vec))
 
 cat("Œrednia sklepu 2: ", mean(dane_sklepu2_vec))
 cat("Mediana sklepu 2: ", median(dane_sklepu2_vec))
 cat("Odchylenie standardowe sklepu 2: ", sd(dane_sklepu2_vec))
+cat("Wariancja sklepu 2: ", var(dane_sklepu2_vec))
 
