@@ -22,10 +22,14 @@ median_rozdzielczy <- function(breaks, counts)
   return(med)
 }
 
-srednia_rozdzielczy <- function()
+srednia_rozdzielczy <- function(counts, mids)
 {
+  srednia = sum(mids*counts)/sum(counts)
   
+  return(srednia)
 }
+
+
 
 wariancja_obciazona <- function(vec, sr)
 {
@@ -163,9 +167,11 @@ sklep2_przedzial_odchylenia <- przedzial_odchylenia(dane_sklepu2_vec, sklep2_war
 #Szeregi rozdzielcze
 sklep1_hist <- hist(dane_sklepu1_vec)
 sklep1_med_r <- median_rozdzielczy(sklep1_hist$breaks, sklep1_hist$counts)
+sklep1_sr_r <- srednia_rozdzielczy(sklep1_hist$counts, sklep1_hist$mids)
 
 sklep2_hist <- hist(dane_sklepu2_vec)
 sklep2_med_r <- median_rozdzielczy(sklep2_hist$breaks, sklep2_hist$counts)
+sklep2_sr_r <- srednia_rozdzielczy(sklep2_hist$counts, sklep2_hist$mids)
 
 cat("Sklep 1:")
 cat("Srednia: ", sklep1_sr)
