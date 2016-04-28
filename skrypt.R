@@ -110,7 +110,21 @@ wspolczynnik_skosnosci <- function(vec, sr, odch)
   return(s)
 }
 
-przedzial_sredniej <-
+przedzial_sredniej <- function(vec, sr, odch, alfa)
+{
+  ile <- length(vec)
+  wart_t <- qt(1 - (alfa / 2), ile - 1) * (odch / sqrt(ile - 1))
+  przedzial <- c(sr - wart_t, sr + wart_t)
+  return(przedzial)
+}
+
+przedzial_odchylenia <- function(vec, war, alfa)
+{
+  ile <- length(vec)
+  ns <- ile * war
+  przedzial <- c(ns / qchisq(1 - (alfa / 2), ile - 1), ns / qchisq(alfa / 2, ile - 1))
+  return(sqrt(przedzial))
+}
 
 dane_sklepu_1 <- read.table("sklep1.txt", header=F, dec=",")
 dane_sklepu_2 <- read.table("sklep2.txt", header=F, dec=",")
@@ -131,6 +145,8 @@ sklep1_war <- wariancja_obciazona(dane_sklepu1_vec, sklep1_sr)
 sklep1_odch <- odchylenie_obciazone(sklep1_war)
 sklep1_odch_nieob <- sd(dane_sklepu1_vec)
 sklep1_kurt <- kurtoza(dane_sklepu1_vec, sklep1_sr, sklep1_odch)
+sklep1_przedzial_sredniej <- przedzial_sredniej(dane_sklepu1_vec, sklep1_sr, sklep1_odch, 0.95)
+sklep1_przedzial_odchylenia <- przedzial_odchylenia(dane_sklepu1_vec, sklep1_war, 0.95)
 
 sklep2_sr <- mean(dane_sklepu2_vec)
 sklep2_med <- median(dane_sklepu2_vec)
@@ -141,9 +157,10 @@ sklep2_war <- wariancja_obciazona(dane_sklepu2_vec, sklep2_sr)
 sklep2_odch <- odchylenie_obciazone(sklep2_war)
 sklep2_odch_nieob <- sd(dane_sklepu2_vec)
 sklep2_kurt <- kurtoza(dane_sklepu2_vec, sklep2_sr, sklep2_odch)
+sklep2_przedzial_sredniej <- przedzial_sredniej(dane_sklepu2_vec, sklep2_sr, sklep2_odch, 0.95)
+sklep2_przedzial_odchylenia <- przedzial_odchylenia(dane_sklepu2_vec, sklep2_war, 0.95)
 
 #Szeregi rozdzielcze
-
 sklep1_hist <- hist(dane_sklepu1_vec)
 sklep1_med_r <- median_rozdzielczy(sklep1_hist$breaks, sklep1_hist$counts)
 
@@ -169,7 +186,8 @@ cat("Wspolczynnik asymetrii: ", wspolczynnik_asymetrii(dane_sklepu1_vec, sklep1_
 cat("Wspolczynnik skosnosci: ", wspolczynnik_skosnosci(dane_sklepu1_vec, sklep1_sr, sklep1_odch))
 cat("Kurtoza: ", sklep1_kurt)
 cat("Eksces: ", eksces(sklep1_kurt))
-hist(dane_sklepu1_vec)
+cat("Przedzial sredniej: (", sklep1_przedzial_sredniej, ")")
+cat("Przedzial odchylenia: (", sklep1_przedzial_odchylenia, ")")
 
 cat("Sklep 2:")
 cat("Srednia: ", sklep2_sr)
@@ -190,4 +208,5 @@ cat("Wspolczynnik asymetrii: ", wspolczynnik_asymetrii(dane_sklepu2_vec, sklep2_
 cat("Wspolczynnik skosnosci: ", wspolczynnik_skosnosci(dane_sklepu2_vec, sklep2_sr, sklep2_odch))
 cat("Kurtoza: ", sklep2_kurt)
 cat("Eksces: ", eksces(sklep2_kurt))
-hist(dane_sklepu2_vec)
+cat("Przedzial sredniej: (", sklep2_przedzial_sredniej, ")")
+cat("Przedzial odchylenia: (", sklep2_przedzial_odchylenia, ")")
