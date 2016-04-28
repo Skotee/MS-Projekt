@@ -111,6 +111,7 @@ cat("Wspolczynnik asymetrii: ", wspolczynnik_asymetrii(dane_sklepu1_vec, sklep1_
 cat("Wspolczynnik skosnosci: ", wspolczynnik_skosnosci(dane_sklepu1_vec, sklep1_sr, sklep1_odch))
 cat("Kurtoza: ", sklep1_kurt)
 cat("Eksces: ", eksces(sklep1_kurt))
+hist(dane_sklepu1_vec)
 
 cat("Sklep 2:")
 cat("Srednia: ", sklep2_sr)
@@ -129,3 +130,4 @@ cat("Wspolczynnik asymetrii: ", wspolczynnik_asymetrii(dane_sklepu2_vec, sklep2_
 cat("Wspolczynnik skosnosci: ", wspolczynnik_skosnosci(dane_sklepu2_vec, sklep2_sr, sklep2_odch))
 cat("Kurtoza: ", sklep2_kurt)
 cat("Eksces: ", eksces(sklep2_kurt))
+hist(dane_sklepu2_vec)
