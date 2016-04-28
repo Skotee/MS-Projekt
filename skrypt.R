@@ -7,31 +7,20 @@ wariancja_rozdzielczy <- function(mids, counts, sred)
 
 kwartyl_rozdzielczy <- function(breaks, counts, kwartyl)
 {
-  poz_med <- sum(counts)
-  if(poz_med%%2)
+  poz_kwar <- sum(counts)
+  if(poz_kwar%%2)
   {
-    poz_med = (poz_med+1)*kwartyl
+    poz_kwar = (poz_kwar+1)*kwartyl
   }
   else
   {
-    poz_med = poz_med*kwartyl
+    poz_kwar = poz_kwar*kwartyl
   }
   
-  licz_skumul = 0
-  szuk_przedzial = 0
+  licz_skumul <- cumsum(counts)
+  szuk_przedzial <- findInterval(poz_kwar, licz_skumul)
   
-  for(i in counts)
-  {
-    licz_skumul = licz_skumul + i
-    szuk_przedzial = szuk_przedzial + 1
-    if(licz_skumul > poz_med)
-    {
-      licz_skumul = licz_skumul - i
-      break()
-    }
-  }
-  
-  med = breaks[szuk_przedzial]+(poz_med-licz_skumul)*((breaks[szuk_przedzial+1]-breaks[szuk_przedzial])/counts[szuk_przedzial])
+  med = breaks[szuk_przedzial]+(poz_kwar-licz_skumul[szuk_przedzial-1])*((breaks[szuk_przedzial+1]-breaks[szuk_przedzial])/counts[szuk_przedzial])
   
   return(med)
 }
