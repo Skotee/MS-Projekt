@@ -22,6 +22,11 @@ median_rozdzielczy <- function(breaks, counts)
   return(med)
 }
 
+srednia_rozdzielczy <- function()
+{
+  
+}
+
 wariancja_obciazona <- function(vec, sr)
 {
   ile <- length(vec)
@@ -143,6 +148,7 @@ sklep1_hist <- hist(dane_sklepu1_vec)
 sklep1_med_r <- median_rozdzielczy(sklep1_hist$breaks, sklep1_hist$counts)
 
 sklep2_hist <- hist(dane_sklepu2_vec)
+sklep2_med_r <- median_rozdzielczy(sklep2_hist$breaks, sklep2_hist$counts)
 
 cat("Sklep 1:")
 cat("Srednia: ", sklep1_sr)
