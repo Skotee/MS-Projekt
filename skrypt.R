@@ -1,3 +1,10 @@
+wariancja_rozdzielczy <- function(mids, counts, sred)
+{
+  war = sum((mids-sred)^2*counts)/sum(counts)
+  
+  return(war)
+}
+
 kwartyl_rozdzielczy <- function(breaks, counts, kwartyl)
 {
   poz_med <- sum(counts)
@@ -157,13 +164,16 @@ przedzial_odchylenia <- function(vec, war, alfa)
 dane_sklepu_1 <- read.table("sklep1.txt", header=F, dec=",")
 dane_sklepu_2 <- read.table("sklep2.txt", header=F, dec=",")
 
-# Szeregi szczegolowe
 dane_sklepu1_vec <- c(dane_sklepu_1[[1]])
 sort(dane_sklepu1_vec)
 
 dane_sklepu2_vec <- c(dane_sklepu_2[[1]])
 sort(dane_sklepu2_vec)
 
+sklep1_hist <- hist(dane_sklepu1_vec)
+sklep2_hist <- hist(dane_sklepu2_vec)
+
+# Szeregi szczegolowe
 sklep1_sr <- mean(dane_sklepu1_vec)
 sklep1_med <- median(dane_sklepu1_vec)
 sklep1_q1 <- quantile(dane_sklepu1_vec, 0.25)
@@ -173,8 +183,6 @@ sklep1_war <- wariancja_obciazona(dane_sklepu1_vec, sklep1_sr)
 sklep1_odch <- odchylenie_obciazone(sklep1_war)
 sklep1_odch_nieob <- sd(dane_sklepu1_vec)
 sklep1_kurt <- kurtoza(dane_sklepu1_vec, sklep1_sr, sklep1_odch)
-sklep1_przedzial_sredniej <- przedzial_sredniej(dane_sklepu1_vec, sklep1_sr, sklep1_odch, 0.95)
-sklep1_przedzial_odchylenia <- przedzial_odchylenia(dane_sklepu1_vec, sklep1_war, 0.95)
 
 sklep2_sr <- mean(dane_sklepu2_vec)
 sklep2_med <- median(dane_sklepu2_vec)
@@ -185,23 +193,30 @@ sklep2_war <- wariancja_obciazona(dane_sklepu2_vec, sklep2_sr)
 sklep2_odch <- odchylenie_obciazone(sklep2_war)
 sklep2_odch_nieob <- sd(dane_sklepu2_vec)
 sklep2_kurt <- kurtoza(dane_sklepu2_vec, sklep2_sr, sklep2_odch)
-sklep2_przedzial_sredniej <- przedzial_sredniej(dane_sklepu2_vec, sklep2_sr, sklep2_odch, 0.95)
-sklep2_przedzial_odchylenia <- przedzial_odchylenia(dane_sklepu2_vec, sklep2_war, 0.95)
 
 #Szeregi rozdzielcze
-sklep1_hist <- hist(dane_sklepu1_vec)
 sklep1_med_r <- kwartyl_rozdzielczy(sklep1_hist$breaks, sklep1_hist$counts, 0.5)
 sklep1_sr_r <- srednia_rozdzielczy(sklep1_hist$counts, sklep1_hist$mids)
 sklep1_q1_r <- kwartyl_rozdzielczy(sklep1_hist$breaks, sklep1_hist$counts, 0.25)
 sklep1_q3_r <- kwartyl_rozdzielczy(sklep1_hist$breaks, sklep1_hist$counts, 0.75)
 sklep1_moda_r <- moda_rozdzielczy(sklep1_hist$counts, sklep1_hist$breaks)
+sklep1_war_r <- wariancja_rozdzielczy(sklep1_hist$mids, sklep1_hist$counts, sklep1_sr_r)
 
-sklep2_hist <- hist(dane_sklepu2_vec)
+
 sklep2_med_r <- kwartyl_rozdzielczy(sklep2_hist$breaks, sklep2_hist$counts, 0.5)
 sklep2_sr_r <- srednia_rozdzielczy(sklep2_hist$counts, sklep2_hist$mids)
 sklep2_med_r <- kwartyl_rozdzielczy(sklep2_hist$breaks, sklep2_hist$counts, 0.25)
 sklep2_med_r <- kwartyl_rozdzielczy(sklep2_hist$breaks, sklep2_hist$counts, 0.75)
 sklep2_moda_r <- moda_rozdzielczy(sklep2_hist$counts, sklep2_hist$breaks)
+sklep2_war_r <- wariancja_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts, sklep2_sr_r)
+
+#zad 3 i 4
+
+sklep1_przedzial_sredniej <- przedzial_sredniej(dane_sklepu1_vec, sklep1_sr, sklep1_odch, 0.95)
+sklep1_przedzial_odchylenia <- przedzial_odchylenia(dane_sklepu1_vec, sklep1_war, 0.95)
+
+sklep2_przedzial_sredniej <- przedzial_sredniej(dane_sklepu2_vec, sklep2_sr, sklep2_odch, 0.95)
+sklep2_przedzial_odchylenia <- przedzial_odchylenia(dane_sklepu2_vec, sklep2_war, 0.95)
 
 cat("Sklep 1:")
 cat("Srednia: ", sklep1_sr)
