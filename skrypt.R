@@ -36,9 +36,23 @@ srednia_rozdzielczy <- function(counts, mids)
   return(srednia)
 }
 
-moda_rozdzielczy <- function()
+moda_rozdzielczy <- function(counts, breaks)
 {
+  szuk = max(counts)
+  n = 0
   
+  for(i in counts)
+  {
+    n = n + 1
+    if(i == szuk)
+    {
+      break()
+    }
+  }
+  
+  moda = breaks[n]+(((szuk-counts[n-1])/((szuk-counts[n-1])+(szuk-counts[n+1])))*(breaks[n+1]-breaks[n]))
+  
+  return(moda)
 }
 
 wariancja_obciazona <- function(vec, sr)
@@ -180,13 +194,14 @@ sklep1_med_r <- kwartyl_rozdzielczy(sklep1_hist$breaks, sklep1_hist$counts, 0.5)
 sklep1_sr_r <- srednia_rozdzielczy(sklep1_hist$counts, sklep1_hist$mids)
 sklep1_q1_r <- kwartyl_rozdzielczy(sklep1_hist$breaks, sklep1_hist$counts, 0.25)
 sklep1_q3_r <- kwartyl_rozdzielczy(sklep1_hist$breaks, sklep1_hist$counts, 0.75)
+sklep1_moda_r <- moda_rozdzielczy(sklep1_hist$counts, sklep1_hist$breaks)
 
 sklep2_hist <- hist(dane_sklepu2_vec)
 sklep2_med_r <- kwartyl_rozdzielczy(sklep2_hist$breaks, sklep2_hist$counts, 0.5)
 sklep2_sr_r <- srednia_rozdzielczy(sklep2_hist$counts, sklep2_hist$mids)
 sklep2_med_r <- kwartyl_rozdzielczy(sklep2_hist$breaks, sklep2_hist$counts, 0.25)
 sklep2_med_r <- kwartyl_rozdzielczy(sklep2_hist$breaks, sklep2_hist$counts, 0.75)
-
+sklep2_moda_r <- moda_rozdzielczy(sklep2_hist$counts, sklep2_hist$breaks)
 
 cat("Sklep 1:")
 cat("Srednia: ", sklep1_sr)
