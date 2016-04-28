@@ -1,3 +1,27 @@
+median_rozdzielczy <- function(breaks, counts)
+{
+  poz_med <- sum(counts)
+  poz_med = (poz_med+1)/2
+  
+  licz_skumul = 0
+  szuk_przedzial = 0
+  
+  for(i in counts)
+  {
+    licz_skumul = licz_skumul + i
+    szuk_przedzial = szuk_przedzial + 1
+    if(licz_skumul > poz_med)
+    {
+      licz_skumul = licz_skumul - i
+      break()
+    }
+  }
+  
+  med = breaks[szuk_przedzial]+(poz_med-licz_skumul)*((breaks[szuk_przedzial+1]-breaks[szuk_przedzial])/counts[szuk_przedzial])
+  
+  return(med)
+}
+
 wariancja_obciazona <- function(vec, sr)
 {
   ile <- length(vec)
@@ -112,6 +136,13 @@ sklep2_war <- wariancja_obciazona(dane_sklepu2_vec, sklep2_sr)
 sklep2_odch <- odchylenie_obciazone(sklep2_war)
 sklep2_odch_nieob <- sd(dane_sklepu2_vec)
 sklep2_kurt <- kurtoza(dane_sklepu2_vec, sklep2_sr, sklep2_odch)
+
+#Szeregi rozdzielcze
+
+sklep1_hist <- hist(dane_sklepu1_vec)
+sklep1_med_r <- median_rozdzielczy(sklep1_hist$breaks, sklep1_hist$counts)
+
+sklep2_hist <- hist(dane_sklepu2_vec)
 
 cat("Sklep 1:")
 cat("Srednia: ", sklep1_sr)
