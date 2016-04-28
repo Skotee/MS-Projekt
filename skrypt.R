@@ -1,3 +1,16 @@
+wariancja_obciazona <- function(vec, sr)
+{
+  ile <- length(vec)
+  w <- sum((vec - sr)^2) / ile
+  return(w)
+}
+
+odchylenie_obciazone <- function(war)
+{
+  o <- sqrt(war)
+  return(o)
+}
+
 moda <- function(vec)
 {
   ux <- unique(vec)
@@ -68,6 +81,8 @@ wspolczynnik_skosnosci <- function(vec, sr, odch)
   return(s)
 }
 
+przedzial_sredniej <-
+
 dane_sklepu_1 <- read.table("sklep1.txt", header=F, dec=",")
 dane_sklepu_2 <- read.table("sklep2.txt", header=F, dec=",")
 
@@ -83,7 +98,9 @@ sklep1_med <- median(dane_sklepu1_vec)
 sklep1_q1 <- quantile(dane_sklepu1_vec, 0.25)
 sklep1_q3 <- quantile(dane_sklepu1_vec, 0.75)
 sklep1_moda <- moda(dane_sklepu1_vec)
-sklep1_odch <- sd(dane_sklepu1_vec)
+sklep1_war <- wariancja_obciazona(dane_sklepu1_vec, sklep1_sr)
+sklep1_odch <- odchylenie_obciazone(sklep1_war)
+sklep1_odch_nieob <- sd(dane_sklepu1_vec)
 sklep1_kurt <- kurtoza(dane_sklepu1_vec, sklep1_sr, sklep1_odch)
 
 sklep2_sr <- mean(dane_sklepu2_vec)
@@ -91,7 +108,9 @@ sklep2_med <- median(dane_sklepu2_vec)
 sklep2_q1 <- quantile(dane_sklepu2_vec, 0.25)
 sklep2_q3 <- quantile(dane_sklepu2_vec, 0.75)
 sklep2_moda<- moda(dane_sklepu2_vec)
-sklep2_odch <- sd(dane_sklepu2_vec)
+sklep2_war <- wariancja_obciazona(dane_sklepu2_vec, sklep2_sr)
+sklep2_odch <- odchylenie_obciazone(sklep2_war)
+sklep2_odch_nieob <- sd(dane_sklepu2_vec)
 sklep2_kurt <- kurtoza(dane_sklepu2_vec, sklep2_sr, sklep2_odch)
 
 cat("Sklep 1:")
@@ -99,11 +118,13 @@ cat("Srednia: ", sklep1_sr)
 cat("Kwartyl 0.25:", sklep1_q1)
 cat("Kwartyl 0.75:", sklep1_q3)
 cat("Mediana: ", sklep1_med)
-cat("Odchylenie standardowe nieobciazone: ", sklep1_odch)
+cat("Odchylenie standardowe nieobciazone: ", sklep1_odch_nieob)
+cat("Odchylenie standardowe obciazone: ", sklep1_odch)
 cat("Odchylenie cwiartkowe: ", cwiartkowe(sklep1_q1,sklep1_q3))
 cat("Odchylenie przecietne od sredniej: ", przecietne_od_sredniej(dane_sklepu1_vec, sklep1_sr))
 cat("Odchylenie przecietne od mediany: ", przecietne_od_mediany(dane_sklepu1_vec, sklep1_med))
 cat("Wariancja nieobciazona: ", var(dane_sklepu1_vec))
+cat("Wariancja obciazona: ", sklep1_war)
 cat("Dominanta: ", sklep1_moda)
 cat("Rozstep: ", rozstep(dane_sklepu1_vec))
 cat("Wspolczynnik zmiennosci: ", wspolczynnik_zmiennosci(sklep1_sr, sklep1_odch), "%")
@@ -118,11 +139,13 @@ cat("Srednia: ", sklep2_sr)
 cat("Kwartyl 0.25 sklepu 2:", sklep2_q1 )
 cat("Kwartyl 0.75 sklepu 2:", sklep2_q3)
 cat("Mediana: ", sklep2_med)
-cat("Odchylenie standardowe nieobciazone: ", sklep2_odch)
+cat("Odchylenie standardowe nieobciazone: ", sklep2_odch_nieob)
+cat("Odchylenie standardowe obciazone: ", sklep2_odch)
 cat("Odchylenie przecietne od sredniej: ", przecietne_od_sredniej(dane_sklepu2_vec, sklep2_sr))
 cat("Odchylenie przecietne od mediany: ", przecietne_od_mediany(dane_sklepu2_vec, sklep2_med))
 cat("Odchylenie cwiartkowe: ", cwiartkowe(sklep2_q1,sklep2_q3))
 cat("Wariancja nieobciazona: ", var(dane_sklepu2_vec))
+cat("Wariancja obciazona: ", sklep1_war)
 cat("Dominanta: ", sklep2_moda)
 cat("Rozstep: ", rozstep(dane_sklepu2_vec))
 cat("Wspolczynnik zmiennosci: ", wspolczynnik_zmiennosci(sklep2_sr, sklep2_odch), "%")
