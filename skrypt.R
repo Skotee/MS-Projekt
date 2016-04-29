@@ -67,7 +67,26 @@ odchylenie_obciazone <- function(war)
 moda <- function(vec)
 {
   ux <- unique(vec)
-  return(ux[which.max(tabulate(match(vec, ux)))])
+  
+  if(length(ux) == length(vec))
+  {
+    return("Brak dominanty")
+  }
+  else
+  {
+    wek_ilosci_powtorzen <- tabulate(match(vec, ux))
+    czy_zduplikowane <- duplicated(wek_ilosci_powtorzen, incomparables = FALSE, fromLast = TRUE)
+    poz_mody <- which.max(wek_ilosci_powtorzen)
+    
+    if(czy_zduplikowane[poz_mody])
+    {
+      return("Brak dominanty")
+    }
+    else
+    {
+      return(ux[poz_mody])
+    }
+  }
 }
 
 rozstep <- function(vec)
