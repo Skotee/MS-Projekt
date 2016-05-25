@@ -230,9 +230,6 @@ przedzial_odchylenia <- function(vec, war, wsp_ufnosci)
 # wart_do_porownania - wartoœæ do porównania precyzji, np. wyliczona œrednia
 precyzja_wzgledna <- function(przedzial, wart_do_porownania)
 {
-  #if(wart_do_porownania == 0)
-    #return("nie mozna dzielic przez 0")
-  
   ile <- length(przedzial)
   
   if(ile != 2)
