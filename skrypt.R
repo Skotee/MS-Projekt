@@ -203,10 +203,20 @@ przedzial_odchylenia <- function(vec, war, wsp_ufnosci)
   # Poziom istotnoœci
   alfa <- 1 - wsp_ufnosci
  
-  # Model I - nieznane odchylenie populacji
-  # qchisq - kwantyl rozk³adu chi-kwadrat 
-  ns <- ile * war
-  przedzial <- c(ns / qchisq(1 - (alfa / 2), ile - 1), ns / qchisq(alfa / 2, ile - 1))
+  if(ile <= 30)
+  {
+    # Model I - nieznane odchylenie populacji
+    # qchisq - kwantyl rozk³adu chi-kwadrat 
+    ns <- ile * war
+    przedzial <- c(ns / qchisq(1 - (alfa / 2), ile - 1), ns / qchisq(alfa / 2, ile - 1))
+  }
+  else
+  {
+    # Model II - nieznane odchylenie populacji
+    odch <- sqrt(war)
+    wart_u <- qnorm(1 - (alfa / 2) / sqrt(2 * ile)
+    przedzial <- c(odch / (1 + wart_u)), odch / (1 - wart_u))
+  }
   
   # Przedzia³ jest dla wariancji, wiêc pierwiastkujemy go
   return(sqrt(przedzial))
