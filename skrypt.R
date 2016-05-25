@@ -51,6 +51,7 @@ moda_rozdzielczy <- function(counts, breaks)
   return(moda)
 }
 
+# Obciazona - dzielimy przez n, nieobciazona - przez (n - 1)
 wariancja_obciazona <- function(vec, sr)
 {
   ile <- length(vec)
@@ -160,12 +161,12 @@ wspolczynnik_skosnosci <- function(vec, sr, odch)
 przedzial_sredniej <- function(vec, sr, odch, wsp_ufnosci)
 {
   if(wsp_ufnosci > 1 || wsp_ufnosci < 0)
-    return("Niepoprawny poziom ufnoœci.")
+    return("niepoprawny poziom ufnoœci")
     
   ile <- length(vec)
   
   if(ile < 1)
-    return("Nie podano ¿adnych danych.")
+    return("nie podano ¿adnych danych")
   
   # Poziom istotnoœci
   alfa <- 1 - wsp_ufnosci
@@ -193,12 +194,12 @@ przedzial_sredniej <- function(vec, sr, odch, wsp_ufnosci)
 przedzial_odchylenia <- function(vec, war, wsp_ufnosci)
 {
   if(wsp_ufnosci > 1 || wsp_ufnosci < 0)
-    return("Niepoprawny poziom ufnosci.")
+    return("niepoprawny poziom ufnoœci")
   
   ile <- length(vec)
   
   if(ile < 1)
-    return("Nie podano zadnych danych.")
+    return("nie podano ¿adnych danych")
   
   # Poziom istotnoœci
   alfa <- 1 - wsp_ufnosci
@@ -225,19 +226,46 @@ przedzial_odchylenia <- function(vec, war, wsp_ufnosci)
   return(przedzial)
 }
 
+# przedzial - wektor przedzialu zawierajacy dwa elementy
+# wart_do_porownania - wartoœæ do porównania precyzji, np. wyliczona œrednia
+precyzja_wzgledna <- function(przedzial, wart_do_porownania)
+{
+  #if(wart_do_porownania == 0)
+    #return("nie mozna dzielic przez 0")
+  
+  ile <- length(przedzial)
+  
+  if(ile != 2)
+    return("niepoprawny wektor przedzia³u")
+  
+  # Odejmujemy doln¹ wartoœæ przedzia³u od górnej
+  blad_maksymalny <- (przedzial[2] - przedzial[1]) / 2
+  precyzja <- (blad_maksymalny / wart_do_porownania) * 100
+  
+  if(precyzja < 5)
+    return(sprintf("%f%% jest mniejsze od 5%%, wiêc mo¿emy bezpiecznie stwierdziæ, ¿e istniej¹ podstawy do uogólnienia", precyzja))
+  else if(precyzja < 10)
+    return(sprintf("%f%% jest miêdzy 5%% a 10%%, wiêc mo¿emy stwierdziæ, ¿e istniej¹ podstawy do uogólnienia, jednak musimy pozostaæ ostro¿ni", precyzja))
+  else
+    return(sprintf("%f%% jest wiêksze od 10%%, wiêc nale¿y odrzuciæ tezê, ¿e istniej¹ podstawy do uogólnienia", precyzja))
+}
+
+# Wczytanie danych z plików
 dane_sklepu_1 <- read.table("sklep1.txt", header=F, dec=",")
 dane_sklepu_2 <- read.table("sklep2.txt", header=F, dec=",")
 
+# Przekszta³cenie ich do posortowanych wektorów
 dane_sklepu1_vec <- c(dane_sklepu_1[[1]])
 sort(dane_sklepu1_vec)
 
 dane_sklepu2_vec <- c(dane_sklepu_2[[1]])
 sort(dane_sklepu2_vec)
 
+# Histogramy
 sklep1_hist <- hist(dane_sklepu1_vec)
 sklep2_hist <- hist(dane_sklepu2_vec)
 
-# Szeregi szczegolowe
+# Szeregi szczegó³owe
 sklep1_sr <- mean(dane_sklepu1_vec)
 sklep1_med <- median(dane_sklepu1_vec)
 sklep1_q1 <- quantile(dane_sklepu1_vec, 0.25)
@@ -258,7 +286,7 @@ sklep2_odch <- odchylenie_obciazone(sklep2_war)
 sklep2_odch_nieob <- sd(dane_sklepu2_vec)
 sklep2_kurt <- kurtoza(dane_sklepu2_vec, sklep2_sr, sklep2_odch)
 
-#Szeregi rozdzielcze
+# Szeregi rozdzielcze
 sklep1_med_r <- kwartyl_rozdzielczy(sklep1_hist$breaks, sklep1_hist$counts, 0.5)
 sklep1_sr_r <- srednia_rozdzielczy(sklep1_hist$counts, sklep1_hist$mids)
 sklep1_q1_r <- kwartyl_rozdzielczy(sklep1_hist$breaks, sklep1_hist$counts, 0.25)
@@ -266,21 +294,24 @@ sklep1_q3_r <- kwartyl_rozdzielczy(sklep1_hist$breaks, sklep1_hist$counts, 0.75)
 sklep1_moda_r <- moda_rozdzielczy(sklep1_hist$counts, sklep1_hist$breaks)
 sklep1_war_r <- wariancja_rozdzielczy(sklep1_hist$mids, sklep1_hist$counts, sklep1_sr_r)
 
-
 sklep2_med_r <- kwartyl_rozdzielczy(sklep2_hist$breaks, sklep2_hist$counts, 0.5)
 sklep2_sr_r <- srednia_rozdzielczy(sklep2_hist$counts, sklep2_hist$mids)
-sklep2_med_r <- kwartyl_rozdzielczy(sklep2_hist$breaks, sklep2_hist$counts, 0.25)
-sklep2_med_r <- kwartyl_rozdzielczy(sklep2_hist$breaks, sklep2_hist$counts, 0.75)
+sklep2_q1_r <- kwartyl_rozdzielczy(sklep2_hist$breaks, sklep2_hist$counts, 0.25)
+sklep2_q3_r <- kwartyl_rozdzielczy(sklep2_hist$breaks, sklep2_hist$counts, 0.75)
 sklep2_moda_r <- moda_rozdzielczy(sklep2_hist$counts, sklep2_hist$breaks)
 sklep2_war_r <- wariancja_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts, sklep2_sr_r)
 
-#zad 3 i 4
+# Zad 3
 
 sklep1_przedzial_sredniej <- przedzial_sredniej(dane_sklepu1_vec, sklep1_sr, sklep1_odch, 0.95)
-sklep1_przedzial_odchylenia <- przedzial_odchylenia(dane_sklepu1_vec, sklep1_war, 0.95)
+#sklep1_przedzial_odchylenia <- przedzial_odchylenia(dane_sklepu1_vec, sklep1_war, 0.95)
+sklep1_precyzja_wzgledna <- precyzja_wzgledna(sklep1_przedzial_sredniej, sklep1_sr)
 
-sklep2_przedzial_sredniej <- przedzial_sredniej(dane_sklepu2_vec, sklep2_sr, sklep2_odch, 0.95)
+# Zad 4
+
+#sklep2_przedzial_sredniej <- przedzial_sredniej(dane_sklepu2_vec, sklep2_sr, sklep2_odch, 0.95)
 sklep2_przedzial_odchylenia <- przedzial_odchylenia(dane_sklepu2_vec, sklep2_war, 0.95)
+sklep2_precyzja_wzgledna <- precyzja_wzgledna(sklep2_przedzial_odchylenia, sklep2_odch)
 
 cat("Sklep 1:")
 cat("Srednia: ", sklep1_sr)
@@ -303,6 +334,7 @@ cat("Kurtoza: ", sklep1_kurt)
 cat("Eksces: ", eksces(sklep1_kurt))
 cat("Przedzial sredniej: (", sklep1_przedzial_sredniej, ")")
 cat("Przedzial odchylenia: (", sklep1_przedzial_odchylenia, ")")
+cat("Precyzja wzglêdna: ", sklep1_precyzja_wzgledna)
 
 cat("Sklep 2:")
 cat("Srednia: ", sklep2_sr)
@@ -325,3 +357,4 @@ cat("Kurtoza: ", sklep2_kurt)
 cat("Eksces: ", eksces(sklep2_kurt))
 cat("Przedzial sredniej: (", sklep2_przedzial_sredniej, ")")
 cat("Przedzial odchylenia: (", sklep2_przedzial_odchylenia, ")")
+cat("Precyzja wzglêdna: ", sklep2_precyzja_wzgledna)
