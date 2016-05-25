@@ -58,6 +58,7 @@ wariancja_obciazona <- function(vec, sr)
   return(w)
 }
 
+# war - wariancja obci¹¿ona
 odchylenie_obciazone <- function(war)
 {
   o <- sqrt(war)
@@ -153,19 +154,61 @@ wspolczynnik_skosnosci <- function(vec, sr, odch)
   return(s)
 }
 
-przedzial_sredniej <- function(vec, sr, odch, alfa)
+# sr - srednia proby
+# odch - odchylenie standardowe próby
+# wsp_ufnosci - poziom ufnoœci podany w treœci
+przedzial_sredniej <- function(vec, sr, odch, wsp_ufnosci)
 {
+  if(wsp_ufnosci > 1 || wsp_ufnosci < 0)
+    return("Niepoprawny poziom ufnoœci.")
+    
   ile <- length(vec)
-  wart_t <- qt(1 - (alfa / 2), ile - 1) * (odch / sqrt(ile - 1))
-  przedzial <- c(sr - wart_t, sr + wart_t)
+  
+  if(ile < 1)
+    return("Nie podano ¿adnych danych.")
+  
+  # Poziom istotnoœci
+  alfa <- 1 - wsp_ufnosci
+  
+  # Ró¿ne wzory na podstawie iloœci danych - http://wm.pollub.pl/files/77/content/files/3097_estymacja_przedzialowa.pdf
+  if(ile <= 30)
+  {
+    # Model II - nieznane odchylenie populacji
+    # qt - kwantyl rozk³adu t-Studenta
+    wart_t_lub_u <- qt(1 - (alfa / 2), ile - 1) * (odch / sqrt(ile - 1))
+    
+  }
+  else
+  {
+    # Model III - nieznane odchylenie populacji
+    # qnorm - kwantyl rozk³adu normalnego
+    wart_t_lub_u <- qnorm(1 - (alfa / 2)) * (odch / sqrt(ile))
+  }
+  
+  przedzial <- c(sr - wart_t_lub_u, sr + wart_t_lub_u)
   return(przedzial)
 }
 
-przedzial_odchylenia <- function(vec, war, alfa)
+# war - wariancja próby
+przedzial_odchylenia <- function(vec, war, wsp_ufnosci)
 {
+  if(wsp_ufnosci > 1 || wsp_ufnosci < 0)
+    return("Niepoprawny poziom ufnosci.")
+  
   ile <- length(vec)
+  
+  if(ile < 1)
+    return("Nie podano zadnych danych.")
+  
+  # Poziom istotnoœci
+  alfa <- 1 - wsp_ufnosci
+ 
+  # Model I - nieznane odchylenie populacji
+  # qchisq - kwantyl rozk³adu chi-kwadrat 
   ns <- ile * war
   przedzial <- c(ns / qchisq(1 - (alfa / 2), ile - 1), ns / qchisq(alfa / 2, ile - 1))
+  
+  # Przedzia³ jest dla wariancji, wiêc pierwiastkujemy go
   return(sqrt(przedzial))
 }
 
