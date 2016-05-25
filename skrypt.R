@@ -173,14 +173,14 @@ przedzial_sredniej <- function(vec, sr, odch, wsp_ufnosci)
   # Ró¿ne wzory na podstawie iloœci danych - http://wm.pollub.pl/files/77/content/files/3097_estymacja_przedzialowa.pdf
   if(ile <= 30)
   {
-    # Model II - nieznane odchylenie populacji
+    # Model II - nieznane odchylenie populacji, ma³a próba
     # qt - kwantyl rozk³adu t-Studenta
     wart_t_lub_u <- qt(1 - (alfa / 2), ile - 1) * (odch / sqrt(ile - 1))
     
   }
   else
   {
-    # Model III - nieznane odchylenie populacji
+    # Model III - nieznane odchylenie populacji, du¿a próba
     # qnorm - kwantyl rozk³adu normalnego
     wart_t_lub_u <- qnorm(1 - (alfa / 2)) * (odch / sqrt(ile))
   }
@@ -205,21 +205,24 @@ przedzial_odchylenia <- function(vec, war, wsp_ufnosci)
  
   if(ile <= 30)
   {
-    # Model I - nieznane odchylenie populacji
+    # Model I - nieznane odchylenie populacji, ma³a próba
     # qchisq - kwantyl rozk³adu chi-kwadrat 
     ns <- ile * war
     przedzial <- c(ns / qchisq(1 - (alfa / 2), ile - 1), ns / qchisq(alfa / 2, ile - 1))
+    
+    # Przedzia³ jest dla wariancji, wiêc pierwiastkujemy go
+    przedzial <- sqrt(przedzial)
   }
   else
   {
-    # Model II - nieznane odchylenie populacji
+    # Model II - nieznane odchylenie populacji, du¿a próba
     odch <- sqrt(war)
-    wart_u <- qnorm(1 - (alfa / 2) / sqrt(2 * ile)
-    przedzial <- c(odch / (1 + wart_u)), odch / (1 - wart_u))
+    wart_u <- qnorm(1 - (alfa / 2)) / sqrt(2 * ile)
+    przedzial <- c(odch / (1 + wart_u), odch / (1 - wart_u))
   }
   
   # Przedzia³ jest dla wariancji, wiêc pierwiastkujemy go
-  return(sqrt(przedzial))
+  return(przedzial)
 }
 
 dane_sklepu_1 <- read.table("sklep1.txt", header=F, dec=",")
