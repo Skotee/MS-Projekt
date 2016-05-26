@@ -221,8 +221,7 @@ przedzial_odchylenia <- function(vec, war, wsp_ufnosci)
     wart_u <- qnorm(1 - (alfa / 2)) / sqrt(2 * ile)
     przedzial <- c(odch / (1 + wart_u), odch / (1 - wart_u))
   }
-  
-  # Przedzia³ jest dla wariancji, wiêc pierwiastkujemy go
+
   return(przedzial)
 }
 
