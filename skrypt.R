@@ -1,10 +1,23 @@
-wariancja_rozdzielczy <- function(mids, counts, sred)
+#Funkcja liczaca wariancje obciazona/nieobciazona szeregu rozdzielczego
+#Do funkcji kolejno przekazujemy wektory srodkow przedzialow i liczebnosci przedzialow oraz srednia
+#Zmienna ob sluzy do wyboru czy chcemy policzyæ wariancje obciazona (1) lub nieobciazona (0)
+wariancja_rozdzielczy <- function(mids, counts, sred, ob)
 {
-  war = sum((mids-sred)^2*counts)/sum(counts)
+  if(ob)
+  {
+    war = sum((mids-sred)^2*counts)/sum(counts)
+  }
+  else
+  {
+    war = sum((mids-sred)^2*counts)/(sum(counts)-1)
+  }
   
   return(war)
 }
 
+#Funkcja liczaca pierwszy i trzeci kwartyl oraz mediane szeregu rozdzielczego
+#Do funkcji kolejno przekazujemy wektory granic przedzialow i liczebnosci przedzialow
+#Zmienna kwartyl sluzy do wyboru ktory kwartyl chcemy policzyc - 0.25 dla pierwszego, 0.5 dla mediany, 0.75 dla trzeciego
 kwartyl_rozdzielczy <- function(breaks, counts, kwartyl)
 {
   poz_kwar <- sum(counts)
@@ -25,6 +38,8 @@ kwartyl_rozdzielczy <- function(breaks, counts, kwartyl)
   return(med)
 }
 
+#Funkcja liczaca srednia szeregu rozdzielczego
+#Do funkcji kolejno przekazujemy wektory liczebnosci i srodkow przedzialow
 srednia_rozdzielczy <- function(counts, mids)
 {
   srednia = sum(mids*counts)/sum(counts)
@@ -32,23 +47,35 @@ srednia_rozdzielczy <- function(counts, mids)
   return(srednia)
 }
 
+#Funkcja liczaca dominante szeregu rozdzielczego
+#Do funkcji kolejno przekazujemy wektory liczebnosci i granic przedzialow
 moda_rozdzielczy <- function(counts, breaks)
 {
   szuk = max(counts)
-  n = 0
-  
-  for(i in counts)
-  {
-    n = n + 1
-    if(i == szuk)
-    {
-      break()
-    }
-  }
+  n = which.max(counts)
   
   moda = breaks[n]+(((szuk-counts[n-1])/((szuk-counts[n-1])+(szuk-counts[n+1])))*(breaks[n+1]-breaks[n]))
   
   return(moda)
+}
+
+#Funkcja liczaca odchylenie przecietne od sredniej/mediany w szeregu rozdzielczym
+#Do funkcji kolejno przekazujemy wektory srodkow i liczebnosci przedzialow
+#W zaleznosci od tego, czy przekazemy srednia czy mediane, mozemy policzyc odpowiednie odchylenie przecietne
+przecietne_rozdzielczy <- function(mids, counts, x)
+{
+  odch = sum(abs((mids - x)*counts))/sum(counts)
+  
+  return(odch)
+}
+
+#Funkcja liczaca kurtoze w szeregu rozdzielczym
+#Do funkcji kolejno przekazujemy wektory srodkow i liczebnosci przedzialow oraz srednia i odchylenie standardowe obciazone
+kurtoza_rozdzielczy <- function(mids, counts, sred, odch)
+{
+  kurt = (sum(((mids-sred)^4)*counts)/sum(counts))/(odch)^4
+  
+  return(kurt)
 }
 
 # Obciazona - dzielimy przez n, nieobciazona - przez (n - 1)
@@ -346,14 +373,38 @@ sklep1_sr_r <- srednia_rozdzielczy(sklep1_hist$counts, sklep1_hist$mids)
 sklep1_q1_r <- kwartyl_rozdzielczy(sklep1_hist$breaks, sklep1_hist$counts, 0.25)
 sklep1_q3_r <- kwartyl_rozdzielczy(sklep1_hist$breaks, sklep1_hist$counts, 0.75)
 sklep1_moda_r <- moda_rozdzielczy(sklep1_hist$counts, sklep1_hist$breaks)
-sklep1_war_r <- wariancja_rozdzielczy(sklep1_hist$mids, sklep1_hist$counts, sklep1_sr_r)
+sklep1_war_ob_r <- wariancja_rozdzielczy(sklep1_hist$mids, sklep1_hist$counts, sklep1_sr_r, 1)
+sklep1_war_nob_r <- wariancja_rozdzielczy(sklep1_hist$mids, sklep1_hist$counts, sklep1_sr_r, 0)
+sklep1_odch_ob_r <- sqrt(sklep1_war_ob_r)
+sklep1_odch_nob_r <- sqrt(sklep1_war_nob_r)
+sklep1_odch_cwr_r <- cwiartkowe(sklep1_q1_r, sklep1_q3_r)
+sklep1_odch_sr_r <- przecietne_rozdzielczy(sklep1_hist$mids, sklep1_hist$counts, sklep1_sr_r)
+sklep1_odch_med_r <- przecietne_rozdzielczy(sklep1_hist$mids, sklep1_hist$counts, sklep1_med_r)
+sklep1_rozstep_r <- rozstep(sklep1_hist$breaks)
+sklep1_wsp_zmien_r <- wspolczynnik_zmiennosci(sklep1_sr_r, sklep1_odch_ob_r)
+#wspolczynnik asymetrii
+#wspolczynnik skosnosci
+sklep1_kurt_r <- kurtoza_rozdzielczy(sklep1_hist$mids, sklep1_hist$counts, sklep1_sr_r, sklep1_odch_ob_r)
+sklep1_eksc_r <- eksces(sklep1_kurt_r)
 
 sklep2_med_r <- kwartyl_rozdzielczy(sklep2_hist$breaks, sklep2_hist$counts, 0.5)
 sklep2_sr_r <- srednia_rozdzielczy(sklep2_hist$counts, sklep2_hist$mids)
 sklep2_q1_r <- kwartyl_rozdzielczy(sklep2_hist$breaks, sklep2_hist$counts, 0.25)
 sklep2_q3_r <- kwartyl_rozdzielczy(sklep2_hist$breaks, sklep2_hist$counts, 0.75)
 sklep2_moda_r <- moda_rozdzielczy(sklep2_hist$counts, sklep2_hist$breaks)
-sklep2_war_r <- wariancja_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts, sklep2_sr_r)
+sklep2_war_ob_r <- wariancja_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts, sklep2_sr_r, 1)
+sklep2_war_nob_r <- wariancja_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts, sklep2_sr_r, 0)
+sklep2_odch_ob_r <- sqrt(sklep2_war_ob_r)
+sklep2_odch_nob_r <- sqrt(sklep2_war_nob_r)
+sklep2_odch_cwr_r <- cwiartkowe(sklep2_q1_r, sklep2_q3_r)
+sklep2_odch_sr_r <- przecietne_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts, sklep2_sr_r)
+sklep2_odch_med_r <- przecietne_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts, sklep2_med_r)
+sklep2_rozstep_r <- rozstep(sklep2_hist$breaks)
+sklep2_wsp_zmien_r <- wspolczynnik_zmiennosci(sklep2_sr_r, sklep2_odch_ob_r)
+#wspolczynnik asymetrii
+#wspolczynnik skosnosci
+sklep2_kurt_r <- kurtoza_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts, sklep2_sr_r, sklep2_odch_ob_r)
+sklep2_eksc_r <- eksces(sklep2_kurt_r)
 
 # Zad 3
 
