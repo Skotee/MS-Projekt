@@ -246,6 +246,62 @@ precyzja_wzgledna <- function(przedzial, wart_do_porownania)
     return(sprintf("%f%% jest wiêksze od 10%%, wiêc nale¿y odrzuciæ tezê, ¿e istniej¹ podstawy do uogólnienia", precyzja))
 }
 
+# vec/sr/war/war_nieob - wektor/œrednia/wariancja obci¹¿ona/ wariancja nieobci¹¿ona prób 1 i 2
+# alfa - poziom istotnoœci podany w treœci (alfa)
+# Mo¿na równie¿ u¿yæ t.test(dane_sklepu1_vec, dane_sklepu2_vec, alternative="greater", var.equal=[TRUE|FALSE], conf.level = 0.95)
+test_dwoch_srednich <- function(vec1, vec2, sr1, sr2, war1, war2, war1_nieob, war2_nieob, alfa)
+{
+  ile1 <- length(vec1)
+  ile2 <- length(vec2)
+  ile1bez1 <- ile1 - 1
+  ile2bez1 <- ile2 - 1
+  
+  # Najpierw testujemy równoœæ wariancji populacji
+  # H0 - s¹ równe
+  # H1 - wariancja pierwszej jest mniejsza (gdy¿ tak wskazuj¹ wariancje prób)
+  # Korzystamy ze statystyki F-Snedecora
+  f <- war1_nieob / war2_nieob
+  wart_f <- qf(1 - alfa, ile1 - 1, ile2 - 1)
+  
+  # Gdy wartoœæ statystyki jest wiêksza od górnej granicy przedzia³u, nie mamy podstaw do odrzucenia hipotezy
+  if(f > -wart_f)
+  {
+    ile1i2bez2 <- ile1 + ile2 - 2
+    
+    # Test t-Studenta dla grup niezale¿nych o równej wariancji - http://www-users.mat.umk.pl/~gemini/2mieStat/2012/testy_teoria.pdf
+    t <- (sr1 - sr2) / sqrt(((war1 * ile1bez1 + war2 * ile2bez1) * (ile1 + ile2)) / (ile1i2bez2 * ile1 * ile2))
+    
+    # Liczba stopni swobody przy odczycie - n1 + n2 - 2
+    wart_t <- qt(1 - alfa, ile1i2bez2)
+    
+    # Gdy wartoœæ jest mniejsza od dolnej granicy przedzia³u, nie ma podstaw do odrzucenia hipotezy
+    if(t < wart_t)
+      h <- "Wartoœæ nie nale¿y do przedzia³u - przyjmujemy hipotezê zerow¹ - œrednie s¹ równe."
+    else
+      h <- "Wartoœæ nale¿y do przedzia³u - odrzucamy hipotezê zerow¹ - œrednia pierwszego sklepu jest wiêksza."
+    
+    return(sprintf("równe odchylenia populacji, wiêc: statystyka t = %f, przedzia³ <%f, ???). %s", t, wart_t, h))
+  }
+  else
+  {
+    war_ile1 <- war1 / ile1
+    war_ile2 <- war2 / ile2
+    
+    # Statystyka Cochrana-Coxa, gdy¿ odchylenia s¹ ró¿ne
+    C <- (sr1 - sr2) / sqrt(war_ile1 + war_ile2)
+    
+    # Wzór Cochrana-Coxa
+    wart_C <- (war_ile1 * qt(1 - alfa, ile1bez1) + war_ile2 * qt(1 - alfa, ile2bez1)) / (war_ile1 + war_ile2)
+    
+    if(C < wart_C)
+      h <- "Wartoœæ nie nale¿y do przedzia³u - przyjmujemy hipotezê zerow¹ - œrednie s¹ równe."
+    else
+      h <- "Wartoœæ nale¿y do przedzia³u - odrzucamy hipotezê zerow¹ - œrednia pierwszego sklepu jest wiêksza."
+    
+    return(sprintf("ró¿ne odchylenia populacji, wiêc: statystyka C = %f, przedzia³ <%f, ???). %s", C, wart_C, h))
+  }
+}
+
 # Wczytanie danych z plików
 dane_sklepu_1 <- read.table("sklep1.txt", header=F, dec=",")
 dane_sklepu_2 <- read.table("sklep2.txt", header=F, dec=",")
@@ -268,6 +324,7 @@ sklep1_q1 <- quantile(dane_sklepu1_vec, 0.25)
 sklep1_q3 <- quantile(dane_sklepu1_vec, 0.75)
 sklep1_moda <- moda(dane_sklepu1_vec)
 sklep1_war <- wariancja_obciazona(dane_sklepu1_vec, sklep1_sr)
+sklep1_war_nieob <- var(dane_sklepu1_vec)
 sklep1_odch <- odchylenie_obciazone(sklep1_war)
 sklep1_odch_nieob <- sd(dane_sklepu1_vec)
 sklep1_kurt <- kurtoza(dane_sklepu1_vec, sklep1_sr, sklep1_odch)
@@ -278,6 +335,7 @@ sklep2_q1 <- quantile(dane_sklepu2_vec, 0.25)
 sklep2_q3 <- quantile(dane_sklepu2_vec, 0.75)
 sklep2_moda<- moda(dane_sklepu2_vec)
 sklep2_war <- wariancja_obciazona(dane_sklepu2_vec, sklep2_sr)
+sklep2_war_nieob <- var(dane_sklepu2_vec)
 sklep2_odch <- odchylenie_obciazone(sklep2_war)
 sklep2_odch_nieob <- sd(dane_sklepu2_vec)
 sklep2_kurt <- kurtoza(dane_sklepu2_vec, sklep2_sr, sklep2_odch)
@@ -319,7 +377,7 @@ cat("Odchylenie standardowe obciazone: ", sklep1_odch)
 cat("Odchylenie cwiartkowe: ", cwiartkowe(sklep1_q1,sklep1_q3))
 cat("Odchylenie przecietne od sredniej: ", przecietne_od_sredniej(dane_sklepu1_vec, sklep1_sr))
 cat("Odchylenie przecietne od mediany: ", przecietne_od_mediany(dane_sklepu1_vec, sklep1_med))
-cat("Wariancja nieobciazona: ", var(dane_sklepu1_vec))
+cat("Wariancja nieobciazona: ", sklep1_war_nieob)
 cat("Wariancja obciazona: ", sklep1_war)
 cat("Dominanta: ", sklep1_moda)
 cat("Rozstep: ", rozstep(dane_sklepu1_vec))
@@ -342,8 +400,8 @@ cat("Odchylenie standardowe obciazone: ", sklep2_odch)
 cat("Odchylenie przecietne od sredniej: ", przecietne_od_sredniej(dane_sklepu2_vec, sklep2_sr))
 cat("Odchylenie przecietne od mediany: ", przecietne_od_mediany(dane_sklepu2_vec, sklep2_med))
 cat("Odchylenie cwiartkowe: ", cwiartkowe(sklep2_q1,sklep2_q3))
-cat("Wariancja nieobciazona: ", var(dane_sklepu2_vec))
-cat("Wariancja obciazona: ", sklep1_war)
+cat("Wariancja nieobciazona: ", sklep2_war_nieob)
+cat("Wariancja obciazona: ", sklep2_war)
 cat("Dominanta: ", sklep2_moda)
 cat("Rozstep: ", rozstep(dane_sklepu2_vec))
 cat("Wspolczynnik zmiennosci: ", wspolczynnik_zmiennosci(sklep2_sr, sklep2_odch), "%")
@@ -354,3 +412,9 @@ cat("Eksces: ", eksces(sklep2_kurt))
 cat("Przedzial sredniej: (", sklep2_przedzial_sredniej, ")")
 cat("Przedzial odchylenia: (", sklep2_przedzial_odchylenia, ")")
 cat("Precyzja wzglêdna: ", sklep2_precyzja_wzgledna)
+
+# Zad 5
+cat("Czy na poziomie istotnoœci 0.05 mo¿na twierdziæ, ¿e wartoœæ miesiêcznych wydatków, na jedn¹ osobê, na pieczywo i produkty zbo¿owe s¹ wiêksze dla klientów pierwszego marketu (sformu³owaæ i zweryfikowaæ odpowiedni¹ hipotezê)?")
+cat("H0 - m1 = m2")
+cat("H1 - m1 > m2")
+cat("Wynik testu t-Welcha: ", test_dwoch_srednich(dane_sklepu1_vec, dane_sklepu2_vec, sklep1_sr, sklep2_sr, sklep1_war, sklep2_war, sklep1_war_nieob, sklep2_war_nieob, 0.05))
