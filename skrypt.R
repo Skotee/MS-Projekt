@@ -78,6 +78,15 @@ kurtoza_rozdzielczy <- function(mids, counts, sred, odch)
   return(kurt)
 }
 
+#Funkcja liczaca wspolczynnik asymetrii w szeregu rozdzielczym
+#Do funkcji kolejno przekazujemy wektory srodkow i liczebnosci przedzialow oraz srednia i odchylenie standardowe obciazone
+wspolczynnik_asymetrii_rozdzielczy <- function(mids, counts, sred, odch)
+{
+  asym = (sum(((mids-sred)^3)*counts)/sum(counts))/(odch)^3
+  
+  return(asym)
+}
+
 # Obciazona - dzielimy przez n, nieobciazona - przez (n - 1)
 wariancja_obciazona <- function(vec, sr)
 {
@@ -401,7 +410,7 @@ sklep1_odch_sr_r <- przecietne_rozdzielczy(sklep1_hist$mids, sklep1_hist$counts,
 sklep1_odch_med_r <- przecietne_rozdzielczy(sklep1_hist$mids, sklep1_hist$counts, sklep1_med_r)
 sklep1_rozstep_r <- rozstep(sklep1_hist$breaks)
 sklep1_wsp_zmien_r <- wspolczynnik_zmiennosci(sklep1_sr_r, sklep1_odch_ob_r)
-#wspolczynnik asymetrii
+sklep1_wsp_asym_r <- wspolczynnik_asymetrii_rozdzielczy(sklep1_hist$mids, sklep1_hist$counts, sklep1_sr_r, sklep1_odch_ob_r)
 #wspolczynnik skosnosci
 sklep1_kurt_r <- kurtoza_rozdzielczy(sklep1_hist$mids, sklep1_hist$counts, sklep1_sr_r, sklep1_odch_ob_r)
 sklep1_eksc_r <- eksces(sklep1_kurt_r)
@@ -420,7 +429,7 @@ sklep2_odch_sr_r <- przecietne_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts,
 sklep2_odch_med_r <- przecietne_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts, sklep2_med_r)
 sklep2_rozstep_r <- rozstep(sklep2_hist$breaks)
 sklep2_wsp_zmien_r <- wspolczynnik_zmiennosci(sklep2_sr_r, sklep2_odch_ob_r)
-#wspolczynnik asymetrii
+sklep2_wsp_asym_r <- wspolczynnik_asymetrii_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts, sklep2_sr_r, sklep2_odch_ob_r)
 #wspolczynnik skosnosci
 sklep2_kurt_r <- kurtoza_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts, sklep2_sr_r, sklep2_odch_ob_r)
 sklep2_eksc_r <- eksces(sklep2_kurt_r)
