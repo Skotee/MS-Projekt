@@ -78,15 +78,6 @@ kurtoza_rozdzielczy <- function(mids, counts, sred, odch)
   return(kurt)
 }
 
-#Funkcja liczaca wspolczynnik asymetrii w szeregu rozdzielczym
-#Do funkcji kolejno przekazujemy wektory srodkow i liczebnosci przedzialow oraz srednia i odchylenie standardowe obciazone
-wspolczynnik_asymetrii_rozdzielczy <- function(mids, counts, sred, odch)
-{
-  asym = (sum(((mids-sred)^3)*counts)/sum(counts))/(odch)^3
-  
-  return(asym)
-}
-
 # Obciazona - dzielimy przez n, nieobciazona - przez (n - 1)
 wariancja_obciazona <- function(vec, sr)
 {
@@ -95,7 +86,7 @@ wariancja_obciazona <- function(vec, sr)
   return(w)
 }
 
-# war - wariancja obciazona
+# war - wariancja obciążona
 odchylenie_obciazone <- function(war)
 {
   o <- sqrt(war)
@@ -192,33 +183,33 @@ wspolczynnik_skosnosci <- function(vec, sr, odch)
 }
 
 # sr - srednia proby
-# odch - odchylenie standardowe proby
-# wsp_ufnosci - poziom ufnosci podany w tresci
+# odch - odchylenie standardowe próby
+# wsp_ufnosci - poziom ufności podany w treści
 przedzial_sredniej <- function(vec, sr, odch, wsp_ufnosci)
 {
   if(wsp_ufnosci > 1 || wsp_ufnosci < 0)
-    return("niepoprawny poziom ufnosci")
+    return("niepoprawny poziom ufności")
     
   ile <- length(vec)
   
   if(ile < 1)
-    return("nie podano zadnych danych")
+    return("nie podano żadnych danych")
   
-  # Poziom istotnosci
+  # Poziom istotności
   alfa <- 1 - wsp_ufnosci
   
-  # Rozne wzory na podstawie ilosci danych - http://wm.pollub.pl/files/77/content/files/3097_estymacja_przedzialowa.pdf
+  # Różne wzory na podstawie ilości danych - http://wm.pollub.pl/files/77/content/files/3097_estymacja_przedzialowa.pdf
   if(ile <= 30)
   {
-    # Model II - nieznane odchylenie populacji, mala proba
-    # qt - kwantyl rozkladu t-Studenta
+    # Model II - nieznane odchylenie populacji, mała próba
+    # qt - kwantyl rozkładu t-Studenta
     wart_t_lub_u <- qt(1 - (alfa / 2), ile - 1) * (odch / sqrt(ile - 1))
     
   }
   else
   {
-    # Model III - nieznane odchylenie populacji, duza proba
-    # qnorm - kwantyl rozkladu normalnego
+    # Model III - nieznane odchylenie populacji, duża próba
+    # qnorm - kwantyl rozkładu normalnego
     wart_t_lub_u <- qnorm(1 - (alfa / 2)) * (odch / sqrt(ile))
   }
   
@@ -226,33 +217,33 @@ przedzial_sredniej <- function(vec, sr, odch, wsp_ufnosci)
   return(przedzial)
 }
 
-# war - wariancja proby
+# war - wariancja próby
 przedzial_odchylenia <- function(vec, war, wsp_ufnosci)
 {
   if(wsp_ufnosci > 1 || wsp_ufnosci < 0)
-    return("niepoprawny poziom ufnosci")
+    return("niepoprawny poziom ufności")
   
   ile <- length(vec)
   
   if(ile < 1)
-    return("nie podano zadnych danych")
+    return("nie podano żadnych danych")
   
-  # Poziom istotnosci
+  # Poziom istotności
   alfa <- 1 - wsp_ufnosci
  
   if(ile <= 30)
   {
-    # Model I - nieznane odchylenie populacji, mala proba
-    # qchisq - kwantyl rozkladu chi-kwadrat 
+    # Model I - nieznane odchylenie populacji, mała próba
+    # qchisq - kwantyl rozkładu chi-kwadrat 
     ns <- ile * war
     przedzial <- c(ns / qchisq(1 - (alfa / 2), ile - 1), ns / qchisq(alfa / 2, ile - 1))
     
-    # Przedzial jest dla wariancji, wiec pierwiastkujemy go
+    # Przedział jest dla wariancji, więc pierwiastkujemy go
     przedzial <- sqrt(przedzial)
   }
   else
   {
-    # Model II - nieznane odchylenie populacji, duza proba
+    # Model II - nieznane odchylenie populacji, duża próba
     odch <- sqrt(war)
     wart_u <- qnorm(1 - (alfa / 2)) / sqrt(2 * ile)
     przedzial <- c(odch / (1 + wart_u), odch / (1 - wart_u))
@@ -262,29 +253,29 @@ przedzial_odchylenia <- function(vec, war, wsp_ufnosci)
 }
 
 # przedzial - wektor przedzialu zawierajacy dwa elementy
-# wart_do_porownania - wartosc do porownania precyzji, np. wyliczona srednia
+# wart_do_porownania - wartość do porównania precyzji, np. wyliczona średnia
 precyzja_wzgledna <- function(przedzial, wart_do_porownania)
 {
   ile <- length(przedzial)
   
   if(ile != 2)
-    return("niepoprawny wektor przedzialu")
+    return("niepoprawny wektor przedziału")
   
-  # Odejmujemy dolna wartosc przedzialu od gornej
+  # Odejmujemy dolną wartość przedziału od górnej
   blad_maksymalny <- (przedzial[2] - przedzial[1]) / 2
   precyzja <- (blad_maksymalny / wart_do_porownania) * 100
   
   if(precyzja < 5)
-    return(sprintf("%f%% jest mniejsze od 5%%, wiec mozemy bezpiecznie stwierdzic, ze istnieja podstawy do uogolnienia", precyzja))
+    return(sprintf("%f%% jest mniejsze od 5%%, więc możemy bezpiecznie stwierdzić, że istnieją podstawy do uogólnienia", precyzja))
   else if(precyzja < 10)
-    return(sprintf("%f%% jest miedzy 5%% a 10%%, wiec mozemy stwierdzic, ze istnieja podstawy do uogolnienia, jednak musimy pozostac ostrozni", precyzja))
+    return(sprintf("%f%% jest między 5%% a 10%%, więc możemy stwierdzić, że istnieją podstawy do uogólnienia, jednak musimy pozostać ostrożni", precyzja))
   else
-    return(sprintf("%f%% jest wieksze od 10%%, wiec nalezy odrzucic teze, ze istnieja podstawy do uogolnienia", precyzja))
+    return(sprintf("%f%% jest większe od 10%%, więc należy odrzucić tezę, że istnieją podstawy do uogólnienia", precyzja))
 }
 
-# vec/sr/war/war_nieob - wektor/srednia/wariancja obciazona/ wariancja nieobciazona prob 1 i 2
-# alfa - poziom istotnosci podany w tresci (alfa)
-# Mozna rowniez uzyc t.test(dane_sklepu1_vec, dane_sklepu2_vec, alternative="greater", var.equal=[TRUE|FALSE], conf.level = 0.95)
+# vec/sr/war/war_nieob - wektor/średnia/wariancja obciążona/ wariancja nieobciążona prób 1 i 2
+# alfa - poziom istotności podany w treści (alfa)
+# Można również użyć t.test(dane_sklepu1_vec, dane_sklepu2_vec, alternative="greater", var.equal=[TRUE|FALSE], conf.level = 0.95)
 test_dwoch_srednich <- function(vec1, vec2, sr1, sr2, war1, war2, war1_nieob, war2_nieob, alfa)
 {
   ile1 <- length(vec1)
@@ -292,57 +283,57 @@ test_dwoch_srednich <- function(vec1, vec2, sr1, sr2, war1, war2, war1_nieob, wa
   ile1bez1 <- ile1 - 1
   ile2bez1 <- ile2 - 1
   
-  # Najpierw testujemy rownosc wariancji populacji
-  # H0 - sa rowne
-  # H1 - wariancja pierwszej jest mniejsza (gdyz tak wskazuja wariancje prob)
+  # Najpierw testujemy równość wariancji populacji
+  # H0 - są równe
+  # H1 - wariancja pierwszej jest mniejsza (gdyż tak wskazują wariancje prób)
   # Korzystamy ze statystyki F-Snedecora
   f <- war1_nieob / war2_nieob
   wart_f <- qf(1 - alfa, ile1 - 1, ile2 - 1)
   
-  # Gdy wartosc statystyki jest wieksza od gornej granicy przedzialu, nie mamy podstaw do odrzucenia hipotezy
+  # Gdy wartość statystyki jest większa od górnej granicy przedziału, nie mamy podstaw do odrzucenia hipotezy
   if(f >= -wart_f)
   {
     ile1i2bez2 <- ile1 + ile2 - 2
     
-    # Test t-Studenta dla grup niezaleznych o rownej wariancji - http://www-users.mat.umk.pl/~gemini/2mieStat/2012/testy_teoria.pdf
+    # Test t-Studenta dla grup niezależnych o równej wariancji - http://www-users.mat.umk.pl/~gemini/2mieStat/2012/testy_teoria.pdf
     t <- (sr1 - sr2) / sqrt(((war1 * ile1bez1 + war2 * ile2bez1) * (ile1 + ile2)) / (ile1i2bez2 * ile1 * ile2))
     
     # Liczba stopni swobody przy odczycie - n1 + n2 - 2
     wart_t <- qt(1 - alfa, ile1i2bez2)
     
-    # Gdy wartosc jest mniejsza od dolnej granicy przedzialu, nie ma podstaw do odrzucenia hipotezy
+    # Gdy wartość jest mniejsza od dolnej granicy przedziału, nie ma podstaw do odrzucenia hipotezy
     if(t <= wart_t)
-      h <- "Wartosc nie nalezy do przedzialu - przyjmujemy hipoteze zerowa - srednie sa rowne."
+      h <- "Wartość nie należy do przedziału - przyjmujemy hipotezę zerową - średnie są równe."
     else
-      h <- "Wartosc nalezy do przedzialu - odrzucamy hipoteze zerowa - srednia pierwszego sklepu jest wieksza."
+      h <- "Wartość należy do przedziału - odrzucamy hipotezę zerową - średnia pierwszego sklepu jest większa."
     
-    return(sprintf("rowne odchylenia populacji, wiec: statystyka t = %f, przedzial <%f, ∞). %s", t, wart_t, h))
+    return(sprintf("równe odchylenia populacji, więc: statystyka t = %f, przedział <%f, ∞). %s", t, wart_t, h))
   }
   else
   {
     war_ile1 <- war1 / ile1
     war_ile2 <- war2 / ile2
     
-    # Statystyka Cochrana-Coxa, gdyz odchylenia sa rozne
+    # Statystyka Cochrana-Coxa, gdyż odchylenia są różne
     C <- (sr1 - sr2) / sqrt(war_ile1 + war_ile2)
     
-    # Wzor Cochrana-Coxa
+    # Wzór Cochrana-Coxa
     wart_C <- (war_ile1 * qt(1 - alfa, ile1bez1) + war_ile2 * qt(1 - alfa, ile2bez1)) / (war_ile1 + war_ile2)
     
     if(C <= wart_C)
-      h <- "Wartosc nie nalezy do przedzialu - przyjmujemy hipoteze zerowa - srednie sa rowne."
+      h <- "Wartość nie należy do przedziału - przyjmujemy hipotezę zerową - średnie są równe."
     else
-      h <- "Wartosc nalezy do przedzialu - odrzucamy hipoteze zerowa - srednia pierwszego sklepu jest wieksza."
+      h <- "Wartość należy do przedziału - odrzucamy hipotezę zerową - średnia pierwszego sklepu jest większa."
     
-    return(sprintf("rozne odchylenia populacji, wiec: statystyka C = %f, przedzial <%f, ∞). %s", C, wart_C, h))
+    return(sprintf("różne odchylenia populacji, więc: statystyka C = %f, przedział <%f, ∞). %s", C, wart_C, h))
   }
 }
 
-# Wczytanie danych z plikow
+# Wczytanie danych z plików
 dane_sklepu_1 <- read.table("sklep1.txt", header=F, dec=",")
 dane_sklepu_2 <- read.table("sklep2.txt", header=F, dec=",")
 
-# Przeksztalcenie ich do posortowanych wektorow
+# Przekształcenie ich do posortowanych wektorów
 dane_sklepu1_vec <- c(dane_sklepu_1[[1]])
 sort(dane_sklepu1_vec)
 
@@ -353,7 +344,7 @@ sort(dane_sklepu2_vec)
 sklep1_hist <- hist(dane_sklepu1_vec)
 sklep2_hist <- hist(dane_sklepu2_vec)
 
-# Szeregi szczegolowe
+# Szeregi szczegółowe
 sklep1_sr <- mean(dane_sklepu1_vec)
 sklep1_med <- median(dane_sklepu1_vec)
 sklep1_q1 <- quantile(dane_sklepu1_vec, 0.25)
@@ -391,7 +382,7 @@ sklep1_odch_sr_r <- przecietne_rozdzielczy(sklep1_hist$mids, sklep1_hist$counts,
 sklep1_odch_med_r <- przecietne_rozdzielczy(sklep1_hist$mids, sklep1_hist$counts, sklep1_med_r)
 sklep1_rozstep_r <- rozstep(sklep1_hist$breaks)
 sklep1_wsp_zmien_r <- wspolczynnik_zmiennosci(sklep1_sr_r, sklep1_odch_ob_r)
-sklep1_wsp_asym_r <- wspolczynnik_asymetrii_rozdzielczy(sklep1_hist$mids, sklep1_hist$counts, sklep1_sr_r, sklep1_odch_ob_r)
+#wspolczynnik asymetrii
 #wspolczynnik skosnosci
 sklep1_kurt_r <- kurtoza_rozdzielczy(sklep1_hist$mids, sklep1_hist$counts, sklep1_sr_r, sklep1_odch_ob_r)
 sklep1_eksc_r <- eksces(sklep1_kurt_r)
@@ -410,7 +401,7 @@ sklep2_odch_sr_r <- przecietne_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts,
 sklep2_odch_med_r <- przecietne_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts, sklep2_med_r)
 sklep2_rozstep_r <- rozstep(sklep2_hist$breaks)
 sklep2_wsp_zmien_r <- wspolczynnik_zmiennosci(sklep2_sr_r, sklep2_odch_ob_r)
-sklep2_wsp_asym_r <- wspolczynnik_asymetrii_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts, sklep2_sr_r, sklep2_odch_ob_r)
+#wspolczynnik asymetrii
 #wspolczynnik skosnosci
 sklep2_kurt_r <- kurtoza_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts, sklep2_sr_r, sklep2_odch_ob_r)
 sklep2_eksc_r <- eksces(sklep2_kurt_r)
@@ -448,7 +439,7 @@ cat("Kurtoza: ", sklep1_kurt)
 cat("Eksces: ", eksces(sklep1_kurt))
 cat("Przedzial sredniej: (", sklep1_przedzial_sredniej, ")")
 cat("Przedzial odchylenia: (", sklep1_przedzial_odchylenia, ")")
-cat("Precyzja wzgledna: ", sklep1_precyzja_wzgledna)
+cat("Precyzja względna: ", sklep1_precyzja_wzgledna)
 
 cat("Sklep 2:")
 cat("Srednia: ", sklep2_sr)
@@ -471,10 +462,10 @@ cat("Kurtoza: ", sklep2_kurt)
 cat("Eksces: ", eksces(sklep2_kurt))
 cat("Przedzial sredniej: (", sklep2_przedzial_sredniej, ")")
 cat("Przedzial odchylenia: (", sklep2_przedzial_odchylenia, ")")
-cat("Precyzja wzgledna: ", sklep2_precyzja_wzgledna)
+cat("Precyzja względna: ", sklep2_precyzja_wzgledna)
 
 # Zad 5
-cat("Czy na poziomie istotnosci 0.05 mozna twierdzic, ze wartosc miesiecznych wydatkow, na jedna osobe, na pieczywo i produkty zbozowe sa wieksze dla klientow pierwszego marketu (sformulowac i zweryfikowac odpowiednia hipoteze)?")
+cat("Czy na poziomie istotności 0.05 można twierdzić, że wartość miesięcznych wydatków, na jedną osobę, na pieczywo i produkty zbożowe są większe dla klientów pierwszego marketu (sformułować i zweryfikować odpowiednią hipotezę)?")
 cat("H0 - m1 = m2")
 cat("H1 - m1 > m2")
 cat("Wynik testu: ", test_dwoch_srednich(dane_sklepu1_vec, dane_sklepu2_vec, sklep1_sr, sklep2_sr, sklep1_war, sklep2_war, sklep1_war_nieob, sklep2_war_nieob, 0.05))
