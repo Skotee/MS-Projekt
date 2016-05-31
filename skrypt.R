@@ -1,6 +1,6 @@
 #Funkcja liczaca wariancje obciazona/nieobciazona szeregu rozdzielczego
 #Do funkcji kolejno przekazujemy wektory srodkow przedzialow i liczebnosci przedzialow oraz srednia
-#Zmienna ob sluzy do wyboru czy chcemy policzy? wariancje obciazona (1) lub nieobciazona (0)
+#Zmienna ob sluzy do wyboru czy chcemy policzyc wariancje obciazona (1) lub nieobciazona (0)
 wariancja_rozdzielczy <- function(mids, counts, sred, ob)
 {
   if(ob)
