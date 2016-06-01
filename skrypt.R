@@ -443,26 +443,37 @@ sklep2_eksc_r <- eksces(sklep2_kurt_r)
 
 # Zad 2
 
-###########################DLA SKLEPU 1#######################
+##########################DLA SKLEPU 1#######################
 
 sklep1_sr
 sklep1_quantile_vec <- quantile(dane_sklepu1_vec)
-sklep1_dystr_emp <- ecdf(dane_sklepu1_vec)
+sklep1_dystr_emp <- knots(ecdf(dane_sklepu1_vec))
+help(ecdf)
 sklep1_dystr_rozk_norm <- pnorm(sklep1_quantile_vec, mean = 44.065, sd = 9.685, lower.tail = TRUE, log.p = FALSE)
 
+zmienna <- sklep1_dystr_emp - sklep1_dystr_rozk_norm
+
+######################################################
 
 
+dane_sklepu1_vec_posort = sort(dane_sklepu1_vec);
+stand_x = (dane_sklepu1_vec_posort - mean(dane_sklepu1_vec_posort))/sd(dane_sklepu1_vec_posort);
+distribution_e = (1:length(dane_sklepu1_vec_posort))/length(dane_sklepu1_vec_posort);
+distribution_h = pnorm(stand_x, 0, 1);
+result = max(abs(distribution_e - distribution_h))
 
 
 ##########################DLA SKLEPU 2########################
 
 sklep2_sr
+sklep2_odch_nieob
 sklep2_quantile_vec <- quantile(dane_sklepu2_vec)
 sklep2_dystr_emp <- ecdf(dane_sklepu2_vec)
-sklep2_dystr_rozk_norm <- pnorm(sklep2_quantile_vec, mean = 44.09, sd = 1, lower.tail = TRUE, log.p = FALSE)
+
+sklep2_dystr_rozk_norm <- pnorm(sklep2_quantile_vec, mean = 44.09, sd = 11.548, lower.tail = TRUE, log.p = FALSE)
 
 
-
+help(ecdf)
 
 
 # Zad 3
