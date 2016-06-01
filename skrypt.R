@@ -434,6 +434,30 @@ sklep2_wsp_asym_r <- wspolczynnik_asymetrii_rozdzielczy(sklep2_hist$mids, sklep2
 sklep2_kurt_r <- kurtoza_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts, sklep2_sr_r, sklep2_odch_ob_r)
 sklep2_eksc_r <- eksces(sklep2_kurt_r)
 
+# Zad 2
+
+###########################DLA SKLEPU 1#######################
+
+sklep1_sr
+sklep1_quantile_vec <- quantile(dane_sklepu1_vec)
+sklep1_dystr_emp <- ecdf(dane_sklepu1_vec)
+sklep1_dystr_rozk_norm <- pnorm(sklep1_quantile_vec, mean = 44.065, sd = 9.685, lower.tail = TRUE, log.p = FALSE)
+
+
+
+
+
+##########################DLA SKLEPU 2########################
+
+sklep2_sr
+sklep2_quantile_vec <- quantile(dane_sklepu2_vec)
+sklep2_dystr_emp <- ecdf(dane_sklepu2_vec)
+sklep2_dystr_rozk_norm <- pnorm(sklep2_quantile_vec, mean = 44.09, sd = 1, lower.tail = TRUE, log.p = FALSE)
+
+
+
+
+
 # Zad 3
 
 sklep1_przedzial_sredniej <- przedzial_sredniej(dane_sklepu1_vec, sklep1_sr, sklep1_odch, 0.95)
