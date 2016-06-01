@@ -558,7 +558,7 @@ sklep1_odch_sr_r <- round(sklep1_odch_sr_r,3)
 sklep1_odch_med_r <- round(sklep1_odch_med_r,3)
 sklep1_rozstep_r <- round(sklep1_rozstep_r,3)
 sklep1_wsp_zmien_r <- round(sklep1_wsp_zmien_r,3)
-#wspolczynnik asymetrii
+sklep1_wsp_asym_r <- round(sklep1_wsp_asym_r,3)
 #wspolczynnik skosnosci
 sklep1_kurt_r <- round(sklep1_kurt_r,3)
 sklep1_eksc_r <- round(sklep1_eksc_r,3)
@@ -577,7 +577,7 @@ sklep2_odch_sr_r <- round(sklep2_odch_sr_r,3)
 sklep2_odch_med_r <- round(sklep2_odch_med_r,3)
 sklep2_rozstep_r <- round(sklep2_rozstep_r,3)
 sklep2_wsp_zmien_r <- round(sklep2_wsp_zmien_r,3)
-#wspolczynnik asymetrii
+sklep2_wsp_asym_r <- round(sklep2_wsp_asym_r,3)
 #wspolczynnik skosnosci
 sklep2_kurt_r <- round(sklep2_kurt_r,3)
 sklep2_eksc_r <- round(sklep2_eksc_r,3)
@@ -620,14 +620,14 @@ S1_rozdz <- c(sklep1_sr_r ,sklep1_med_r ,sklep1_moda_r ,sklep1_q1_r ,
               sklep1_q3_r ,sklep1_war_ob_r ,sklep1_war_nob_r ,
               sklep1_odch_ob_r ,sklep1_odch_nob_r ,sklep1_odch_cwr_r ,
               sklep1_odch_sr_r ,sklep1_odch_med_r ,sklep1_rozstep_r ,
-              paste(sklep1_wsp_zmien_r, "%") ,"?","?",sklep1_kurt_r ,sklep1_eksc_r)
+              paste(sklep1_wsp_zmien_r, "%") ,sklep1_wsp_asym_r,"?",sklep1_kurt_r ,sklep1_eksc_r)
 
 
 S2_rozdz <- c(sklep2_sr_r ,sklep2_med_r ,sklep2_moda_r , paste(sklep2_q1_r , "0") ,
               sklep2_q3_r ,sklep2_war_ob_r ,sklep2_war_nob_r ,
               sklep2_odch_ob_r ,sklep2_odch_nob_r , paste(sklep2_odch_cwr_r , "0"),
               sklep2_odch_sr_r ,sklep2_odch_med_r ,sklep2_rozstep_r ,
-              paste(sklep2_wsp_zmien_r, "%") ,"?","?",sklep2_kurt_r ,sklep2_eksc_r)
+              paste(sklep2_wsp_zmien_r, "%") ,sklep2_wsp_asym_r,"?",sklep2_kurt_r ,sklep2_eksc_r)
 
 
 
