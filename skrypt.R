@@ -349,18 +349,22 @@ test_kolmogorowa <- function(vec, sr, odch)
 {
   ile <- length(vec)
   
-  # F0(vec)
+  # F0(vec i)
   dystr_rozk_norm <- pnorm(vec, sr, odch)
-  dystr_emp = 1:ile / ile
+  
+  # Fn(vec i)
+  dystr_emp <- 1:ile / ile
+  
+  # Wartość statystyki ze wzoru
   wart_kryt <- 0.881 / sqrt(ile)
   
   # Wartość statystyki
   dn = max(abs(dystr_emp - dystr_rozk_norm))
   
   if(dn <= wart_kryt || dn >= 1)
-    return("brak podstaw do odrzucenia hipotezy zerowej(hipoteza zerowa = podane dane mają rozkład normalny)")
+    return("brak podstaw do odrzucenia hipotezy zerowej - rozkład jest normalny.")
   else
-    return(dn)
+    return("odrzucamy hipotezę zerową - rozkład nie jest normalny.")
 }
 
 # Wczytanie danych z plików
@@ -656,8 +660,8 @@ S2_rozdz <- c(sklep2_sr_r ,sklep2_med_r ,sklep2_moda_r , paste(sklep2_q1_r) ,
 
 zad1 <- data.frame(opis = zad1opis, S1_szczeg, S2_szczeg,S1_rozdz,S2_rozdz)
 
-zad2 <-  c(paste("Wynik testu Kolmogorowa - Lillieforse'a dla zestawu danych sklepu 1: ",  test_kolmogorowa(dane_sklepu1_vec, sklep1_sr, sklep1_odch)),
-           paste("Wynik testu Kolmogorowa - Lillieforse'a dla zestawu danych sklepu 2: ",  test_kolmogorowa(dane_sklepu2_vec, sklep2_sr, sklep2_odch)))
+zad2 <-  c(paste("Wynik testu Kolmogorowa - Lillieforse'a dla zestawu danych sklepu 1 (H0 - podane dane mają rozkład normalny H1 - nie mają): ",  test_kolmogorowa(dane_sklepu1_vec, sklep1_sr, sklep1_odch)),
+           paste("Wynik testu Kolmogorowa - Lillieforse'a dla zestawu danych sklepu 2 (H0 - podane dane mają rozkład normalny H1 - nie mają): ",  test_kolmogorowa(dane_sklepu2_vec, sklep2_sr, sklep2_odch)))
 
 zad3 <-  c(paste("Przedzial sredniej: (", sklep1_przedzial_sredniej[1]," , ", sklep1_przedzial_sredniej[2], ")"),
            #paste("Przedzial odchylenia: (", sklep1_przedzial_odchylenia, ")"),
