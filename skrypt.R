@@ -372,11 +372,8 @@ dane_sklepu_1 <- read.table("sklep1.txt", header=F, dec=",")
 dane_sklepu_2 <- read.table("sklep2.txt", header=F, dec=",")
 
 # Przekształcenie ich do posortowanych wektorów
-dane_sklepu1_vec <- c(dane_sklepu_1[[1]])
-sort(dane_sklepu1_vec)
-
-dane_sklepu2_vec <- c(dane_sklepu_2[[1]])
-sort(dane_sklepu2_vec)
+dane_sklepu1_vec <- sort(c(dane_sklepu_1[[1]]))
+dane_sklepu2_vec <- sort(c(dane_sklepu_2[[1]]))
 
 # Histogramy
 sklep1_hist <- hist(dane_sklepu1_vec)
