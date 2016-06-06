@@ -461,70 +461,23 @@ sklep2_wsp_asym_r <- wspolczynnik_asymetrii_rozdzielczy(sklep2_hist$mids, sklep2
 sklep2_kurt_r <- kurtoza_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts, sklep2_sr_r, sklep2_odch_ob_r)
 sklep2_eksc_r <- eksces(sklep2_kurt_r)
 
+# Zad 2
+
+wynik_kolmogorowa_1 <- test_kolmogorowa(dane_sklepu2_vec, sklep2_sr, sklep2_odch)
+wynik_kolmogorowa_2 <- test_kolmogorowa(dane_sklepu2_vec, sklep2_sr, sklep2_odch)
+
 # Zad 3
 
 sklep1_przedzial_sredniej <- przedzial_sredniej(dane_sklepu1_vec, sklep1_sr, sklep1_odch, 0.95)
-#sklep1_przedzial_odchylenia <- przedzial_odchylenia(dane_sklepu1_vec, sklep1_war, 0.95)
 sklep1_precyzja_wzgledna <- precyzja_wzgledna(sklep1_przedzial_sredniej, sklep1_sr)
 
 # Zad 4
 
-#sklep2_przedzial_sredniej <- przedzial_sredniej(dane_sklepu2_vec, sklep2_sr, sklep2_odch, 0.95)
 sklep2_przedzial_odchylenia <- przedzial_odchylenia(dane_sklepu2_vec, sklep2_war, 0.95)
 sklep2_precyzja_wzgledna <- precyzja_wzgledna(sklep2_przedzial_odchylenia, sklep2_odch)
 
-#cat("Sklep 1:")
-#cat("Srednia: ", sklep1_sr)
-#cat("Kwartyl 0.25:", sklep1_q1)
-#cat("Kwartyl 0.75:", sklep1_q3)
-#cat("Mediana: ", sklep1_med)
-#cat("Odchylenie standardowe nieobciazone: ", sklep1_odch_nieob)
-#cat("Odchylenie standardowe obciazone: ", sklep1_odch)
-#cat("Odchylenie cwiartkowe: ", cwiartkowe(sklep1_q1,sklep1_q3))
-#cat("Odchylenie przecietne od sredniej: ", przecietne_od_sredniej(dane_sklepu1_vec, sklep1_sr))
-#cat("Odchylenie przecietne od mediany: ", przecietne_od_mediany(dane_sklepu1_vec, sklep1_med))
-#cat("Wariancja nieobciazona: ", sklep1_war_nieob)
-#cat("Wariancja obciazona: ", sklep1_war)
-#cat("Dominanta: ", sklep1_moda)
-#cat("Rozstep: ", rozstep(dane_sklepu1_vec))
-#cat("Wspolczynnik zmiennosci: ", wspolczynnik_zmiennosci(sklep1_sr, sklep1_odch), "%")
-#cat("Wspolczynnik asymetrii: ", wspolczynnik_asymetrii(dane_sklepu1_vec, sklep1_sr, sklep1_odch))
-#cat("Wspolczynnik skosnosci: ", wspolczynnik_skosnosci(dane_sklepu1_vec, sklep1_sr, sklep1_odch))
-#cat("Kurtoza: ", sklep1_kurt)
-#cat("Eksces: ", eksces(sklep1_kurt))
-#cat("Przedzial sredniej: (", sklep1_przedzial_sredniej, ")")
-#cat("Przedzial odchylenia: (", sklep1_przedzial_odchylenia, ")")
-#cat("Precyzja względna: ", sklep1_precyzja_wzgledna)
-
-#cat("Sklep 2:")
-#cat("Srednia: ", sklep2_sr)
-#cat("Kwartyl 0.25 sklepu 2:", sklep2_q1 )
-#cat("Kwartyl 0.75 sklepu 2:", sklep2_q3)
-#cat("Mediana: ", sklep2_med)
-#cat("Odchylenie standardowe nieobciazone: ", sklep2_odch_nieob)
-#cat("Odchylenie standardowe obciazone: ", sklep2_odch)
-#cat("Odchylenie przecietne od sredniej: ", przecietne_od_sredniej(dane_sklepu2_vec, sklep2_sr))
-#cat("Odchylenie przecietne od mediany: ", przecietne_od_mediany(dane_sklepu2_vec, sklep2_med))
-#cat("Odchylenie cwiartkowe: ", cwiartkowe(sklep2_q1,sklep2_q3))
-#cat("Wariancja nieobciazona: ", sklep2_war_nieob)
-#cat("Wariancja obciazona: ", sklep2_war)
-#cat("Dominanta: ", sklep2_moda)
-#cat("Rozstep: ", rozstep(dane_sklepu2_vec))
-#cat("Wspolczynnik zmiennosci: ", wspolczynnik_zmiennosci(sklep2_sr, sklep2_odch), "%")
-#cat("Wspolczynnik asymetrii: ", wspolczynnik_asymetrii(dane_sklepu2_vec, sklep2_sr, sklep2_odch))
-#cat("Wspolczynnik skosnosci: ", wspolczynnik_skosnosci(dane_sklepu2_vec, sklep2_sr, sklep2_odch))
-#cat("Kurtoza: ", sklep2_kurt)
-#cat("Eksces: ", eksces(sklep2_kurt))
-#cat("Przedzial sredniej: (", sklep2_przedzial_sredniej, ")")
-#cat("Przedzial odchylenia: (", sklep2_przedzial_odchylenia, ")")
-#cat("Precyzja względna: ", sklep2_precyzja_wzgledna)
-
 # Zad 5
-#cat("Czy na poziomie istotności 0.05 można twierdzić, że wartość miesięcznych wydatków, na jedną osobę, na pieczywo i produkty zbożowe są większe dla klientów pierwszego marketu (sformułować i zweryfikować odpowiednią hipotezę)?")
-#cat("H0 - m1 = m2")
-#cat("H1 - m1 > m2")
-#cat("Wynik testu: ", test_dwoch_srednich(dane_sklepu1_vec, dane_sklepu2_vec, sklep1_sr, sklep2_sr, sklep1_war, sklep2_war, sklep1_war_nieob, sklep2_war_nieob, 0.05))
-
+wynik_testu <- test_dwoch_srednich(dane_sklepu1_vec, dane_sklepu2_vec, sklep1_sr, sklep2_sr, sklep1_war, sklep2_war, sklep1_war_nieob, sklep2_war_nieob, 0.05)
 
 
 #formatowanie
@@ -660,8 +613,8 @@ S2_rozdz <- c(sklep2_sr_r ,sklep2_med_r ,sklep2_moda_r , paste(sklep2_q1_r) ,
 
 zad1 <- data.frame(opis = zad1opis, S1_szczeg, S2_szczeg,S1_rozdz,S2_rozdz)
 
-zad2 <-  c(paste("Wynik testu Kolmogorowa - Lillieforse'a dla zestawu danych sklepu 1 (H0 - podane dane mają rozkład normalny H1 - nie mają): ",  test_kolmogorowa(dane_sklepu1_vec, sklep1_sr, sklep1_odch)),
-           paste("Wynik testu Kolmogorowa - Lillieforse'a dla zestawu danych sklepu 2 (H0 - podane dane mają rozkład normalny H1 - nie mają): ",  test_kolmogorowa(dane_sklepu2_vec, sklep2_sr, sklep2_odch)))
+zad2 <-  c(paste("Wynik testu Kolmogorowa - Lillieforse'a dla zestawu danych sklepu 1 (H0 - podane dane mają rozkład normalny H1 - nie mają): ",  wynik_kolmogorowa_1),
+           paste("Wynik testu Kolmogorowa - Lillieforse'a dla zestawu danych sklepu 2 (H0 - podane dane mają rozkład normalny H1 - nie mają): ",  wynik_kolmogorowa_2))
 
 zad3 <-  c(paste("Przedzial sredniej: (", sklep1_przedzial_sredniej[1]," , ", sklep1_przedzial_sredniej[2], ")"),
            #paste("Przedzial odchylenia: (", sklep1_przedzial_odchylenia, ")"),
@@ -674,7 +627,7 @@ zad4 <-  c(#paste("Przedzial sredniej: (", sklep2_przedzial_sredniej, ")"),
 zad5 <-  c("Czy na poziomie istotnosci 0.05 mozna twierdzic, ze wartosc miesiecznych wydatkow, na jedna osobe, na pieczywo i produkty zbozowe sa wieksze dla klientow pierwszego marketu (sformulowac i zweryfikowac odpowiednia hipoteze)?",
            "H0 - m1 = m2",
            "H1 - m1 > m2",
-           paste("Wynik testu: ", test_dwoch_srednich(dane_sklepu1_vec, dane_sklepu2_vec, sklep1_sr, sklep2_sr, sklep1_war, sklep2_war, sklep1_war_nieob, sklep2_war_nieob, 0.05)))
+           paste("Wynik testu: ", wynik_testu))
 
 
 zad1
