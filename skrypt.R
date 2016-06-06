@@ -345,7 +345,7 @@ test_dwoch_srednich <- function(vec1, vec2, sr1, sr2, war1, war2, war1_nieob, wa
   }
 }
 
-test_kolmogorow <- function(vec, sr, odch)
+test_kolmogorowa <- function(vec, sr, odch)
 {
   ile <- length(vec)
   
@@ -355,12 +355,12 @@ test_kolmogorow <- function(vec, sr, odch)
   wart_kryt <- 0.881 / sqrt(ile)
   
   # Wartość statystyki
-  dn = max(abs(sklep2_dystr_emp - sklep2_dystr_rozk_norm))
+  dn = max(abs(dystr_emp - dystr_rozk_norm))
   
   if(dn <= wart_kryt || dn >= 1)
-    return("brak podstaw do odrzucenia hipotezy zerowej(hipoteza zerowa = podane dane maj? rozk?ad normalny)");
+    return("brak podstaw do odrzucenia hipotezy zerowej(hipoteza zerowa = podane dane mają rozkład normalny)")
   else
-    return(dn);
+    return(dn)
 }
 
 # Wczytanie danych z plików
