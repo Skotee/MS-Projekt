@@ -345,7 +345,23 @@ test_dwoch_srednich <- function(vec1, vec2, sr1, sr2, war1, war2, war1_nieob, wa
   }
 }
 
-
+test_kolmogorow <- function(vec, sr, odch)
+{
+  ile <- length(vec)
+  
+  # F0(vec)
+  dystr_rozk_norm <- pnorm(vec, sr, odch)
+  dystr_emp = 1:ile / ile
+  wart_kryt <- 0.881 / sqrt(ile)
+  
+  # Warto≈õƒá statystyki
+  dn = max(abs(sklep2_dystr_emp - sklep2_dystr_rozk_norm))
+  
+  if(dn <= wart_kryt || dn >= 1)
+    return("brak podstaw do odrzucenia hipotezy zerowej(hipoteza zerowa = podane dane maj? rozk?ad normalny)");
+  else
+    return(dn);
+}
 
 # Wczytanie danych z plik√≥w
 dane_sklepu_1 <- read.table("sklep1.txt", header=F, dec=",")
@@ -440,50 +456,6 @@ sklep2_wsp_asym_r <- wspolczynnik_asymetrii_rozdzielczy(sklep2_hist$mids, sklep2
 #wspolczynnik skosnosci
 sklep2_kurt_r <- kurtoza_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts, sklep2_sr_r, sklep2_odch_ob_r)
 sklep2_eksc_r <- eksces(sklep2_kurt_r)
-
-# Zad 2
-
-##########################DLA SKLEPU 1#######################
-
-kolmogorow_test1<-function(dane_sklepu1_vec_posort)
-{
-  
-dane_sklepu1_vec_posort = sort(dane_sklepu1_vec);
-sklep1_dystr_rozk_norm <- pnorm(dane_sklepu1_vec, mean = 44.065, sd = 9.685, lower.tail = TRUE, log.p = FALSE)
-sklep1_dystr_emp = (1:length(dane_sklepu1_vec_posort))/length(dane_sklepu1_vec_posort);
-N1 <- length(dane_sklepu1_vec)
-critical_values_1 <- (0.881/sqrt(N1));
-result1 = max(abs(sklep1_dystr_emp - sklep1_dystr_rozk_norm))
-
-  if(result1 <= critical_values_1)
-  {
-    print("Brak podstaw do odrzucenia hipotezy zerowej(hipoteza zerowa = podane dane majπ rozk≥ad normalny)");
-  }  else
-  {
-    print("Podane dane nie majπ rozk≥adu normalnego");
-  }
-}
-
-##########################DLA SKLEPU 2########################
-
-kolmogorow_test2<-function(dane_sklepu2_vec_posort)
-{
-  
-  dane_sklepu2_vec_posort = sort(dane_sklepu2_vec);
-  sklep2_dystr_rozk_norm <- pnorm(dane_sklepu2_vec, mean = 44.09043, sd = 11.5475, lower.tail = TRUE, log.p = FALSE)
-  sklep2_dystr_emp = (1:length(dane_sklepu2_vec_posort))/length(dane_sklepu2_vec_posort);
-  N2 <- length(dane_sklepu2_vec)
-  critical_values_2 <- (0.881/sqrt(N2));
-  result2 = max(abs(sklep2_dystr_emp - sklep2_dystr_rozk_norm))
-  
-  if(result2 <= critical_values_2)
-  {
-    print("Brak podstaw do odrzucenia hipotezy zerowej(hipoteza zerowa = podane dane majπ rozk≥ad normalny)");
-  }  else
-  {
-    print("Podane dane nie majπ rozk≥adu normalnego");
-  }
-}
 
 # Zad 3
 
@@ -684,8 +656,8 @@ S2_rozdz <- c(sklep2_sr_r ,sklep2_med_r ,sklep2_moda_r , paste(sklep2_q1_r) ,
 
 zad1 <- data.frame(opis = zad1opis, S1_szczeg, S2_szczeg,S1_rozdz,S2_rozdz)
 
-zad2 <-  c(paste("Wynik testu Kolmogorowa - Lillieforse'a dla zestawu danych sklepu 1: ",  kolmogorow_test1(dane_sklepu_1)),
-           paste("Wynik testu Kolmogorowa - Lillieforse'a dla zestawu danych sklepu 2: ",  kolmogorow_test2(dane_sklepu_2)))
+zad2 <-  c(paste("Wynik testu Kolmogorowa - Lillieforse'a dla zestawu danych sklepu 1: ",  test_kolmogorowa(dane_sklepu1_vec, sklep1_sr, sklep1_odch)),
+           paste("Wynik testu Kolmogorowa - Lillieforse'a dla zestawu danych sklepu 2: ",  test_kolmogorowa(dane_sklepu2_vec, sklep2_sr, sklep2_odch)))
 
 zad3 <-  c(paste("Przedzial sredniej: (", sklep1_przedzial_sredniej[1]," , ", sklep1_przedzial_sredniej[2], ")"),
            #paste("Przedzial odchylenia: (", sklep1_przedzial_odchylenia, ")"),
@@ -702,6 +674,7 @@ zad5 <-  c("Czy na poziomie istotnosci 0.05 mozna twierdzic, ze wartosc miesiecz
 
 
 zad1
+zad2
 zad3
 zad4
 zad5
