@@ -445,36 +445,57 @@ sklep2_eksc_r <- eksces(sklep2_kurt_r)
 
 ##########################DLA SKLEPU 1#######################
 
-sklep1_sr
+
 sklep1_quantile_vec <- quantile(dane_sklepu1_vec)
-sklep1_dystr_emp <- knots(ecdf(dane_sklepu1_vec))
-help(ecdf)
 sklep1_dystr_rozk_norm <- pnorm(sklep1_quantile_vec, mean = 44.065, sd = 9.685, lower.tail = TRUE, log.p = FALSE)
-
-zmienna <- sklep1_dystr_emp - sklep1_dystr_rozk_norm
-
-######################################################
-
-
+sklep1_dystr_emp = (1:length(dane_sklepu1_vec_posort))/length(dane_sklepu1_vec_posort);
+N1 <- length(dane_sklepu1_vec)
 dane_sklepu1_vec_posort = sort(dane_sklepu1_vec);
-stand_x = (dane_sklepu1_vec_posort - mean(dane_sklepu1_vec_posort))/sd(dane_sklepu1_vec_posort);
-distribution_e = (1:length(dane_sklepu1_vec_posort))/length(dane_sklepu1_vec_posort);
-distribution_h = pnorm(stand_x, 0, 1);
-result = max(abs(distribution_e - distribution_h))
 
+#zmienna <- sklep1_dystr_emp - sklep1_dystr_rozk_norm
+#stand_x = (dane_sklepu1_vec_posort - mean(dane_sklepu1_vec_posort))/sd(dane_sklepu1_vec_posort);
+
+level1 <- (0.881/sqrt(N1));
+result1 = max(abs(sklep1_dystr_rozk_norm - sklep1_dystr_emp))
+
+kolomogorow_lillie_test1<-function(dane_sklepu1_vec_posort, level1)
+{
+ 
+  if(result1 <= kolomogorow_lillie_test_critical_values(length(dane_sklepu1_vec_posort), level1))
+  {
+    print("Brak podstaw do odrzucenia hipotezy zerowej(hipoteza zerowa = podane dane maj¹ rozk³ad normalny)");
+  }  else
+  {
+    print("Podane dane nie maj¹ rozk³adu normalnego");
+  }
+}
 
 ##########################DLA SKLEPU 2########################
 
-sklep2_sr
-sklep2_odch_nieob
+sklep2_sr <- mean(dane_sklepu2_vec)
 sklep2_quantile_vec <- quantile(dane_sklepu2_vec)
-sklep2_dystr_emp <- ecdf(dane_sklepu2_vec)
+sklep2_dystr_emp = (1:length(dane_sklepu2_vec_posort))/length(dane_sklepu2_vec_posort);
+sklep2_dystr_rozk_norm <- pnorm(sklep2_quantile_vec, mean = 44.09043, sd = 11.5475, lower.tail = TRUE, log.p = FALSE)
+N2 <- length(dane_sklepu2_vec)
+dane_sklepu2_vec_posort = sort(dane_sklepu2_vec);
 
-sklep2_dystr_rozk_norm <- pnorm(sklep2_quantile_vec, mean = 44.09, sd = 11.548, lower.tail = TRUE, log.p = FALSE)
+#zmienna <- sklep2_dystr_emp - sklep2_dystr_rozk_norm
+#stand_y = (dane_sklepu2_vec_posort - mean(dane_sklepu2_vec_posort))/sd(dane_sklepu2_vec_posort);
 
+level2 <- (0.881/sqrt(N2));
+result2 = max(abs(sklep2_dystr_rozk_norm - sklep2_dystr_emp))
 
-help(ecdf)
-
+kolomogorow_lillie_test2<-function(dane_sklepu2_vec_posort, level2)
+{
+  
+  if(result2 <= kolomogorow_lillie_test_critical_values(length(dane_sklepu2_vec_posort), level2))
+  {
+    print("Brak podstaw do odrzucenia hipotezy zerowej(hipoteza zerowa = podane dane maj¹ rozk³ad normalny)");
+  }  else
+  {
+    print("Podane dane nie maj¹ rozk³adu normalnego");
+  }
+}
 
 # Zad 3
 
@@ -675,6 +696,8 @@ S2_rozdz <- c(sklep2_sr_r ,sklep2_med_r ,sklep2_moda_r , paste(sklep2_q1_r) ,
 
 zad1 <- data.frame(opis = zad1opis, S1_szczeg, S2_szczeg,S1_rozdz,S2_rozdz)
 
+zad2 <-  c(paste("Wynik testu Kolmogorowa - Lillieforse'a dla zestawu danych sklepu 1: ",  kolomogorow_lillie_test1),
+           paste("Wynik testu Kolmogorowa - Lillieforse'a dla zestawu danych sklepu 2: ",  kolomogorow_lillie_test2))
 
 zad3 <-  c(paste("Przedzial sredniej: (", sklep1_przedzial_sredniej[1]," , ", sklep1_przedzial_sredniej[2], ")"),
            #paste("Przedzial odchylenia: (", sklep1_przedzial_odchylenia, ")"),
