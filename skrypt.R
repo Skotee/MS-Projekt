@@ -1,30 +1,3 @@
-skosnosc <- function(sred, med, odch)
-{
-  skosn = 3*(sred-med)/odch
-  
-  return(skosn)
-}
-
-#Funkcja tworzaca wektor przedziałów dla histogramu
-#Do funkcji przekazujemy wektor danych
-przedzialy_histogramu <- function(vec)
-{
-  x = round(sqrt(length(vec)))
-  war_min <- min(vec)
-  
-  szer = (max(vec) - war_min)/x
-  
-  
-  vector <- c(war_min)
-  
-  for (i in 1:x)
-  {
-    vector <- c(vector, (war_min+(szer*i)))
-  }
-  
-  return(vector)
-}
-
 #Funkcja liczaca wariancje obciazona/nieobciazona szeregu rozdzielczego
 #Do funkcji kolejno przekazujemy wektory srodkow przedzialow i liczebnosci przedzialow oraz srednia
 #Zmienna ob sluzy do wyboru czy chcemy policzyc wariancje obciazona (1) lub nieobciazona (0)
@@ -138,7 +111,7 @@ odchylenie_obciazone <- function(war)
 
 moda <- function(vec)
 {
-  ux <- unique(vec) #tworzy wektor wartosci wystepujacych tylko raz
+  ux <- unique(vec)
   
   if(length(ux) == length(vec))
   {
@@ -146,7 +119,7 @@ moda <- function(vec)
   }
   else
   {
-    wek_ilosci_powtorzen <- tabulate(match(vec, ux)) #liczy ilosc powtorzen wszystkich elementow
+    wek_ilosci_powtorzen <- tabulate(match(vec, ux))
     czy_zduplikowane <- duplicated(wek_ilosci_powtorzen, incomparables = FALSE, fromLast = TRUE)
     poz_mody <- which.max(wek_ilosci_powtorzen)
     
@@ -218,6 +191,13 @@ wspolczynnik_asymetrii <- function(vec, sr, odch)
   return(k)  
 }
 
+wspolczynnik_skosnosci <- function(vec, sr, odch)
+{
+  ile <- length(vec)
+  s <- (ile * sum((vec - sr)^3)) / ((ile - 1) * (ile - 2) * (odch)^4)
+  return(s)
+}
+
 # sr - srednia proby
 # odch - odchylenie standardowe próby
 # wsp_ufnosci - poziom ufności podany w treści
@@ -225,7 +205,7 @@ przedzial_sredniej <- function(vec, sr, odch, wsp_ufnosci)
 {
   if(wsp_ufnosci > 1 || wsp_ufnosci < 0)
     return("niepoprawny poziom ufnosci")
-  
+    
   ile <- length(vec)
   
   if(ile < 1)
@@ -266,7 +246,7 @@ przedzial_odchylenia <- function(vec, war, wsp_ufnosci)
   
   # Poziom istotności
   alfa <- 1 - wsp_ufnosci
-  
+ 
   if(ile <= 30)
   {
     # Model I - nieznane odchylenie populacji, mała próba
@@ -284,7 +264,7 @@ przedzial_odchylenia <- function(vec, war, wsp_ufnosci)
     wart_u <- qnorm(1 - (alfa / 2)) / sqrt(2 * ile)
     przedzial <- c(odch / (1 + wart_u), odch / (1 - wart_u))
   }
-  
+
   return(przedzial)
 }
 
@@ -396,8 +376,8 @@ dane_sklepu1_vec <- sort(c(dane_sklepu_1[[1]]))
 dane_sklepu2_vec <- sort(c(dane_sklepu_2[[1]]))
 
 # Histogramy
-sklep1_hist <- hist(dane_sklepu1_vec, breaks = przedzialy_histogramu(dane_sklepu1_vec))
-sklep2_hist <- hist(dane_sklepu2_vec, breaks = przedzialy_histogramu(dane_sklepu2_vec))
+sklep1_hist <- hist(dane_sklepu1_vec)
+sklep2_hist <- hist(dane_sklepu2_vec)
 
 # Szeregi szczegółowe
 sklep1_sr <- mean(dane_sklepu1_vec)
@@ -415,10 +395,10 @@ sklep1_przec_med <- przecietne_od_mediany(dane_sklepu1_vec, sklep1_med)
 sklep1_rozstep <- rozstep(dane_sklepu1_vec)
 sklep1_wsp_zmien <- wspolczynnik_zmiennosci(sklep1_sr, sklep1_odch)
 sklep1_wsp_asym <- wspolczynnik_asymetrii(dane_sklepu1_vec, sklep1_sr, sklep1_odch)
-sklep1_wsp_skos <- skosnosc(sklep1_sr, sklep1_med, sklep1_odch)
+sklep1_wsp_skos <- wspolczynnik_skosnosci(dane_sklepu1_vec, sklep1_sr, sklep1_odch)
 sklep1_kurt <- kurtoza(dane_sklepu1_vec, sklep1_sr, sklep1_odch)
 sklep1_eksc <- eksces(sklep1_kurt)
-
+  
 
 sklep2_sr <- mean(dane_sklepu2_vec)
 sklep2_med <- median(dane_sklepu2_vec)
@@ -435,7 +415,7 @@ sklep2_przec_med <- przecietne_od_mediany(dane_sklepu2_vec, sklep2_med)
 sklep2_rozstep <- rozstep(dane_sklepu2_vec)
 sklep2_wsp_zmien <- wspolczynnik_zmiennosci(sklep2_sr, sklep2_odch)
 sklep2_wsp_asym <- wspolczynnik_asymetrii(dane_sklepu2_vec, sklep2_sr, sklep2_odch)
-sklep2_wsp_skos <- skosnosc(sklep2_sr, sklep2_med, sklep2_odch)
+sklep2_wsp_skos <- wspolczynnik_skosnosci(dane_sklepu2_vec, sklep2_sr, sklep2_odch)
 sklep2_kurt <- kurtoza(dane_sklepu2_vec, sklep2_sr, sklep2_odch)
 sklep2_eksc <- eksces(sklep2_kurt)
 
@@ -455,7 +435,7 @@ sklep1_odch_med_r <- przecietne_rozdzielczy(sklep1_hist$mids, sklep1_hist$counts
 sklep1_rozstep_r <- rozstep(sklep1_hist$breaks)
 sklep1_wsp_zmien_r <- wspolczynnik_zmiennosci(sklep1_sr_r, sklep1_odch_ob_r)
 sklep1_wsp_asym_r <- wspolczynnik_asymetrii_rozdzielczy(sklep1_hist$mids, sklep1_hist$counts, sklep1_sr_r, sklep1_odch_ob_r)
-sklep1_skosn <- skosnosc(sklep1_sr_r, sklep1_med_r, sklep1_odch_ob_r)
+#wspolczynnik skosnosci
 sklep1_kurt_r <- kurtoza_rozdzielczy(sklep1_hist$mids, sklep1_hist$counts, sklep1_sr_r, sklep1_odch_ob_r)
 sklep1_eksc_r <- eksces(sklep1_kurt_r)
 
@@ -474,7 +454,7 @@ sklep2_odch_med_r <- przecietne_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts
 sklep2_rozstep_r <- rozstep(sklep2_hist$breaks)
 sklep2_wsp_zmien_r <- wspolczynnik_zmiennosci(sklep2_sr_r, sklep2_odch_ob_r)
 sklep2_wsp_asym_r <- wspolczynnik_asymetrii_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts, sklep2_sr_r, sklep2_odch_ob_r)
-sklep2_skosn <- skosnosc(sklep2_sr_r, sklep2_med_r, sklep2_odch_ob_r)
+#wspolczynnik skosnosci
 sklep2_kurt_r <- kurtoza_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts, sklep2_sr_r, sklep2_odch_ob_r)
 sklep2_eksc_r <- eksces(sklep2_kurt_r)
 
@@ -503,7 +483,7 @@ wynik_testu <- test_dwoch_srednich(dane_sklepu1_vec, dane_sklepu2_vec, sklep1_sr
 # Szeregi szczegółowe
 sklep1_sr <- round(sklep1_sr,3)
 sklep1_med <- round(sklep1_med,3)
-if(sklep1_moda != "Brak") sklep1_moda <- round(sklep1_moda,3)
+#sklep1_moda <- round(sklep1_moda,3) daje wartosc "brak"
 sklep1_q1 <- round(sklep1_q1,3)
 sklep1_q3 <- round(sklep1_q3,3)
 sklep1_war <- round(sklep1_war,3)
@@ -519,11 +499,11 @@ sklep1_wsp_asym <- round(sklep1_wsp_asym,3)
 sklep1_wsp_skos <- round(sklep1_wsp_skos,3)
 sklep1_kurt <- round(sklep1_kurt,3)
 sklep1_eksc <- round(sklep1_eksc,3)
-
+  
 
 sklep2_sr <- round(sklep2_sr,3)
 sklep2_med <- round(sklep2_med,3)
-if(sklep2_moda != "Brak") sklep2_moda<- round(sklep2_moda,3)
+#sklep2_moda<- round(sklep2_moda,3) daje wartosc "brak"
 sklep2_q1 <- round(sklep2_q1,3)
 sklep2_q3 <- round(sklep2_q3,3)
 sklep2_war <- round(sklep2_war,3)
@@ -556,7 +536,7 @@ sklep1_odch_med_r <- round(sklep1_odch_med_r,3)
 sklep1_rozstep_r <- round(sklep1_rozstep_r,3)
 sklep1_wsp_zmien_r <- round(sklep1_wsp_zmien_r,3)
 sklep1_wsp_asym_r <- round(sklep1_wsp_asym_r,3)
-sklep1_skosn <-  round(sklep1_skosn,3)
+#wspolczynnik skosnosci
 sklep1_kurt_r <- round(sklep1_kurt_r,3)
 sklep1_eksc_r <- round(sklep1_eksc_r,3)
 
@@ -575,7 +555,7 @@ sklep2_odch_med_r <- round(sklep2_odch_med_r,3)
 sklep2_rozstep_r <- round(sklep2_rozstep_r,3)
 sklep2_wsp_zmien_r <- round(sklep2_wsp_zmien_r,3)
 sklep2_wsp_asym_r <- round(sklep2_wsp_asym_r,3)
-sklep2_skosn <-  round(sklep2_skosn,3)
+#wspolczynnik skosnosci
 sklep2_kurt_r <- round(sklep2_kurt_r,3)
 sklep2_eksc_r <- round(sklep2_eksc_r,3)
 
@@ -595,36 +575,36 @@ zad1opis <- c("srednia                            ",
               "Rozstep                            ",
               "Wspolczynnik zmiennosci            ",
               "Wspolczynnik asymetrii             ",
-              "Skosnosc                           ",
+              "Wspolczynnik skosnosci             ",
               "Kurtoza                            ",
-              "Eksces                             ")
+              "Eksces                            ")
 
 #wektory tworzace kolumny
 S1_szczeg <- c(sklep1_sr ,sklep1_med ,sklep1_moda ,sklep1_q1 ,
-               sklep1_q3 ,sklep1_war ,sklep1_war_nieob ,sklep1_odch ,
-               sklep1_odch_nieob ,sklep1_cwart ,sklep1_przec_sred ,
-               sklep1_przec_med ,sklep1_rozstep ,paste(sklep1_wsp_zmien, "%") ,
-               sklep1_wsp_asym ,sklep1_wsp_skos ,sklep1_kurt ,sklep1_eksc )
+              sklep1_q3 ,sklep1_war ,sklep1_war_nieob ,sklep1_odch ,
+              sklep1_odch_nieob ,sklep1_cwart ,sklep1_przec_sred ,
+              sklep1_przec_med ,sklep1_rozstep ,paste(sklep1_wsp_zmien, "%") ,
+              sklep1_wsp_asym ,sklep1_wsp_skos ,sklep1_kurt ,sklep1_eksc )
 
 
 S2_szczeg <- c(sklep2_sr ,sklep2_med ,sklep2_moda,sklep2_q1 ,sklep2_q3 ,
-               sklep2_war ,sklep2_war_nieob ,sklep2_odch ,sklep2_odch_nieob ,
-               sklep2_cwart ,sklep2_przec_sred ,sklep2_przec_med ,
-               sklep2_rozstep ,paste(sklep2_wsp_zmien, "%") ,sklep2_wsp_asym ,
-               sklep2_wsp_skos ,sklep2_kurt ,sklep2_eksc )
+              sklep2_war ,sklep2_war_nieob ,sklep2_odch ,sklep2_odch_nieob ,
+              sklep2_cwart ,sklep2_przec_sred ,sklep2_przec_med ,
+              sklep2_rozstep ,paste(sklep2_wsp_zmien, "%") ,sklep2_wsp_asym ,
+              sklep2_wsp_skos ,sklep2_kurt ,sklep2_eksc )
 
 S1_rozdz <- c(sklep1_sr_r ,sklep1_med_r ,sklep1_moda_r ,sklep1_q1_r ,
               sklep1_q3_r ,sklep1_war_ob_r ,sklep1_war_nob_r ,
               sklep1_odch_ob_r ,sklep1_odch_nob_r ,sklep1_odch_cwr_r ,
               sklep1_odch_sr_r ,sklep1_odch_med_r ,sklep1_rozstep_r ,
-              paste(sklep1_wsp_zmien_r, "%") ,sklep1_wsp_asym_r,sklep1_skosn,sklep1_kurt_r ,sklep1_eksc_r)
+              paste(sklep1_wsp_zmien_r, "%") ,sklep1_wsp_asym_r,"?",sklep1_kurt_r ,sklep1_eksc_r)
 
 
 S2_rozdz <- c(sklep2_sr_r ,sklep2_med_r ,sklep2_moda_r , paste(sklep2_q1_r) ,
               sklep2_q3_r ,sklep2_war_ob_r ,sklep2_war_nob_r ,
               sklep2_odch_ob_r ,sklep2_odch_nob_r , paste(sklep2_odch_cwr_r),
               sklep2_odch_sr_r ,sklep2_odch_med_r ,sklep2_rozstep_r ,
-              paste(sklep2_wsp_zmien_r, "%") ,sklep2_wsp_asym_r,sklep2_skosn,sklep2_kurt_r ,sklep2_eksc_r)
+              paste(sklep2_wsp_zmien_r, "%") ,sklep2_wsp_asym_r,"?",sklep2_kurt_r ,sklep2_eksc_r)
 
 
 
@@ -634,10 +614,12 @@ zad2 <-  c(paste("Wynik testu Kolmogorowa - Lillieforse'a dla zestawu danych skl
            paste("Wynik testu Kolmogorowa - Lillieforse'a dla zestawu danych sklepu 2 (H0 - podane dane mają rozkład normalny H1 - nie mają): ",  wynik_kolmogorowa_2))
 
 zad3 <-  c(paste("Przedzial sredniej: (", sklep1_przedzial_sredniej[1]," , ", sklep1_przedzial_sredniej[2], ")"),
+           #paste("Przedzial odchylenia: (", sklep1_przedzial_odchylenia, ")"),
            paste("Precyzja wzgledna: ", sklep1_precyzja_wzgledna))
 
-zad4 <-  c(paste( "Przedzial odchylenia: (" , sklep2_przedzial_odchylenia[1] , " , " , sklep2_przedzial_odchylenia[2] ,  ")"),
-           paste("Precyzja wzgledna: ", sklep2_precyzja_wzgledna))
+zad4 <-  c(#paste("Przedzial sredniej: (", sklep2_przedzial_sredniej, ")"),
+            paste( "Przedzial odchylenia: (" , sklep2_przedzial_odchylenia[1] , " , " , sklep2_przedzial_odchylenia[2] ,  ")"),
+            paste("Precyzja wzgledna: ", sklep2_precyzja_wzgledna))
 
 zad5 <-  c("Czy na poziomie istotnosci 0.05 mozna twierdzic, ze wartosc miesiecznych wydatkow, na jedna osobe, na pieczywo i produkty zbozowe sa wieksze dla klientow pierwszego marketu (sformulowac i zweryfikowac odpowiednia hipoteze)?",
            "H0 - m1 = m2",
@@ -646,6 +628,7 @@ zad5 <-  c("Czy na poziomie istotnosci 0.05 mozna twierdzic, ze wartosc miesiecz
 
 
 zad1
+zad2
 zad3
 zad4
 zad5
