@@ -638,8 +638,8 @@ zad3 <-  c(paste("Przedzial sredniej: (", sklep1_przedzial_sredniej[1]," , ", sk
            paste("Precyzja wzgledna: ", sklep1_precyzja_wzgledna))
 
 zad4 <-  c(#paste("Przedzial sredniej: (", sklep2_przedzial_sredniej, ")"),
-  paste( "Przedzial odchylenia: (" , sklep2_przedzial_odchylenia[1] , " , " , sklep2_przedzial_odchylenia[2] ,  ")"),
-  paste("Precyzja wzgledna: ", sklep2_precyzja_wzgledna))
+           paste( "Przedzial odchylenia: (" , sklep2_przedzial_odchylenia[1] , " , " , sklep2_przedzial_odchylenia[2] ,  ")"),
+           paste("Precyzja wzgledna: ", sklep2_precyzja_wzgledna))
 
 zad5 <-  c("Czy na poziomie istotnosci 0.05 mozna twierdzic, ze wartosc miesiecznych wydatkow, na jedna osobe, na pieczywo i produkty zbozowe sa wieksze dla klientow pierwszego marketu (sformulowac i zweryfikowac odpowiednia hipoteze)?",
            "H0 - m1 = m2",
