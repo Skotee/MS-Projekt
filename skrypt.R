@@ -326,8 +326,8 @@ test_dwoch_srednich <- function(vec1, vec2, sr1, sr2, war1, war2, war1_nieob, wa
   f <- war1_nieob / war2_nieob
   wart_f <- qf(1 - alfa / 2, ile1 - 1, ile2 - 1)
   
-  # Gdy wartość statystyki jest większa od górnej granicy przedziału, nie mamy podstaw do odrzucenia hipotezy
-  if(f >= -wart_f)
+  # Gdy wartość statystyki jest większa od górnej granicy przedziału, nie mamy podstaw do odrzucenia hipotezy, w przeciwnym wypadku odrzucamy
+  if(f < wart_f)
   {
     ile1i2bez2 <- ile1 + ile2 - 2
     
