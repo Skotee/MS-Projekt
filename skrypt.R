@@ -321,10 +321,10 @@ test_dwoch_srednich <- function(vec1, vec2, sr1, sr2, war1, war2, war1_nieob, wa
   
   # Najpierw testujemy równość wariancji populacji
   # H0 - są równe
-  # H1 - wariancja pierwszej jest mniejsza (gdyż tak wskazują wariancje prób)
+  # H1 - wariancje są różne
   # Korzystamy ze statystyki F-Snedecora
   f <- war1_nieob / war2_nieob
-  wart_f <- qf(alfa, ile1 - 1, ile2 - 1)
+  wart_f <- qf(1 - alfa / 2, ile1 - 1, ile2 - 1)
   
   # Gdy wartość statystyki jest większa od górnej granicy przedziału, nie mamy podstaw do odrzucenia hipotezy
   if(f >= -wart_f)
