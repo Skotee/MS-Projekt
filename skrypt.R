@@ -324,7 +324,7 @@ test_dwoch_srednich <- function(vec1, vec2, sr1, sr2, war1, war2, war1_nieob, wa
   # H1 - wariancja pierwszej jest mniejsza (gdyż tak wskazują wariancje prób)
   # Korzystamy ze statystyki F-Snedecora
   f <- war1_nieob / war2_nieob
-  wart_f <- qf(1 - alfa, ile1 - 1, ile2 - 1)
+  wart_f <- qf(alfa, ile1 - 1, ile2 - 1)
   
   # Gdy wartość statystyki jest większa od górnej granicy przedziału, nie mamy podstaw do odrzucenia hipotezy
   if(f >= -wart_f)
@@ -339,9 +339,9 @@ test_dwoch_srednich <- function(vec1, vec2, sr1, sr2, war1, war2, war1_nieob, wa
     
     # Gdy wartość jest mniejsza od dolnej granicy przedziału, nie ma podstaw do odrzucenia hipotezy
     if(t <= wart_t)
-      h <- "Wartosc nie nalezy do przedzialu - przyjmujemy hipoteze zerowa - srednie sa rowne."
+      h <- "Wartosc nie nalezy do przedzialu - przyjmujemy hipoteze zerowa - wartości przeciętne sa rowne."
     else
-      h <- "Wartosc nalezy do przedzialu - odrzucamy hipoteze zerowa - srednia pierwszego sklepu jest wieksza."
+      h <- "Wartosc nalezy do przedzialu - odrzucamy hipoteze zerowa - wartość przeciętna pierwszego sklepu jest wieksza."
     
     return(sprintf("rowne odchylenia populacji, wiec: statystyka t = %f, przedzial <%f, ∞). %s", t, wart_t, h))
   }
@@ -357,9 +357,9 @@ test_dwoch_srednich <- function(vec1, vec2, sr1, sr2, war1, war2, war1_nieob, wa
     wart_C <- (war_ile1 * qt(1 - alfa, ile1bez1) + war_ile2 * qt(1 - alfa, ile2bez1)) / (war_ile1 + war_ile2)
     
     if(C <= wart_C)
-      h <- "Wartosc nie nalezy do przedzialu - przyjmujemy hipoteze zerowa - srednie sa rowne."
+      h <- "Wartosc nie nalezy do przedzialu - przyjmujemy hipoteze zerowa - wartości przeciętne sa rowne."
     else
-      h <- "Wartosc nalezy do przedzialu - odrzucamy hipoteze zerowa - srednia pierwszego sklepu jest wieksza."
+      h <- "Wartosc nalezy do przedzialu - odrzucamy hipoteze zerowa - wartość przeciętna pierwszego sklepu jest wieksza."
     
     return(sprintf("rozne odchylenia populacji, wiec: statystyka C = %f, przedzial <%f, ∞). %s", C, wart_C, h))
   }
