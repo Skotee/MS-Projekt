@@ -381,13 +381,14 @@ test_kolmogorowa <- function(vec, sr, odch)
   # Wartość statystyki
   dn = max(abs(dystr_emp - dystr_rozk_norm))
   
-  if(dn <= wart_kryt || dn >= 1)
+  if(dn < wart_kryt || dn > 1)
     return("brak podstaw do odrzucenia hipotezy zerowej - rozkład jest normalny.")
   else
     return("odrzucamy hipotezę zerową - rozkład nie jest normalny.")
 }
 
 # Wczytanie danych z plików
+# setwd("sciezka") gdy nie wczytują się pliki
 dane_sklepu_1 <- read.table("sklep1.txt", header=F, dec=",")
 dane_sklepu_2 <- read.table("sklep2.txt", header=F, dec=",")
 
