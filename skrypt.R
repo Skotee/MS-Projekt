@@ -96,7 +96,7 @@ moda_rozdzielczy <- function(counts, breaks)
 #Funkcja liczaca odchylenie przecietne od sredniej/mediany w szeregu rozdzielczym
 #Do funkcji kolejno przekazujemy wektory srodkow i liczebnosci przedzialow
 #W zaleznosci od tego, czy przekazemy srednia czy mediane, mozemy policzyc odpowiednie odchylenie przecietne
-przecietne_rozdzielczy <- function(mids, counts, x)
+przecietne_rozdzielczy <- function(mids, counts, x) #za x przekazujemy średnią albo medianę
 {
   odch = sum(abs((mids - x)*counts))/sum(counts)
   
@@ -381,23 +381,13 @@ test_kolmogorowa <- function(vec, sr, odch)
   # WartoĹ›Ä‡ statystyki
   dn = max(abs(dystr_emp - dystr_rozk_norm))
   
-<<<<<<< HEAD
   if(dn <= wart_kryt || dn >= 1)
     return("brak podstaw do odrzucenia hipotezy zerowej - rozkĹ‚ad jest normalny.")
-=======
-  if(dn < wart_kryt || dn > 1)
-    return("brak podstaw do odrzucenia hipotezy zerowej - rozkład jest normalny.")
->>>>>>> origin/master
   else
     return("odrzucamy hipotezÄ™ zerowÄ… - rozkĹ‚ad nie jest normalny.")
 }
 
-<<<<<<< HEAD
 # Wczytanie danych z plikĂłw
-=======
-# Wczytanie danych z plików
-# setwd("sciezka") gdy nie wczytują się pliki
->>>>>>> origin/master
 dane_sklepu_1 <- read.table("sklep1.txt", header=F, dec=",")
 dane_sklepu_2 <- read.table("sklep2.txt", header=F, dec=",")
 
@@ -423,7 +413,7 @@ sklep1_cwart <- cwiartkowe(sklep1_q1,sklep1_q3)
 sklep1_przec_sred <- przecietne_od_sredniej(dane_sklepu1_vec, sklep1_sr)
 sklep1_przec_med <- przecietne_od_mediany(dane_sklepu1_vec, sklep1_med)
 sklep1_rozstep <- rozstep(dane_sklepu1_vec)
-sklep1_wsp_zmien <- wspolczynnik_zmiennosci(sklep1_sr, sklep1_odch)
+sklep1_wsp_zmien <- wspolczynnik_zmiennosci(sklep1_odch, sklep1_sr)
 sklep1_wsp_asym <- wspolczynnik_asymetrii(dane_sklepu1_vec, sklep1_sr, sklep1_odch)
 sklep1_wsp_skos <- skosnosc(sklep1_sr, sklep1_med, sklep1_odch)
 sklep1_kurt <- kurtoza(dane_sklepu1_vec, sklep1_sr, sklep1_odch)
@@ -443,7 +433,7 @@ sklep2_cwart <- cwiartkowe(sklep2_q1,sklep2_q3)
 sklep2_przec_sred <- przecietne_od_sredniej(dane_sklepu2_vec, sklep2_sr)
 sklep2_przec_med <- przecietne_od_mediany(dane_sklepu2_vec, sklep2_med)
 sklep2_rozstep <- rozstep(dane_sklepu2_vec)
-sklep2_wsp_zmien <- wspolczynnik_zmiennosci(sklep2_sr, sklep2_odch)
+sklep2_wsp_zmien <- wspolczynnik_zmiennosci(sklep2_odch, sklep2_sr)
 sklep2_wsp_asym <- wspolczynnik_asymetrii(dane_sklepu2_vec, sklep2_sr, sklep2_odch)
 sklep2_wsp_skos <- skosnosc(sklep2_sr, sklep2_med, sklep2_odch)
 sklep2_kurt <- kurtoza(dane_sklepu2_vec, sklep2_sr, sklep2_odch)
@@ -463,7 +453,7 @@ sklep1_odch_cwr_r <- cwiartkowe(sklep1_q1_r, sklep1_q3_r)
 sklep1_odch_sr_r <- przecietne_rozdzielczy(sklep1_hist$mids, sklep1_hist$counts, sklep1_sr_r)
 sklep1_odch_med_r <- przecietne_rozdzielczy(sklep1_hist$mids, sklep1_hist$counts, sklep1_med_r)
 sklep1_rozstep_r <- rozstep(sklep1_hist$breaks)
-sklep1_wsp_zmien_r <- wspolczynnik_zmiennosci(sklep1_sr_r, sklep1_odch_ob_r)
+sklep1_wsp_zmien_r <- wspolczynnik_zmiennosci(sklep1_odch_ob_r, sklep1_sr_r)
 sklep1_wsp_asym_r <- wspolczynnik_asymetrii_rozdzielczy(sklep1_hist$mids, sklep1_hist$counts, sklep1_sr_r, sklep1_odch_ob_r)
 sklep1_skosn <- skosnosc(sklep1_sr_r, sklep1_med_r, sklep1_odch_ob_r)
 sklep1_kurt_r <- kurtoza_rozdzielczy(sklep1_hist$mids, sklep1_hist$counts, sklep1_sr_r, sklep1_odch_ob_r)
@@ -482,7 +472,7 @@ sklep2_odch_cwr_r <- cwiartkowe(sklep2_q1_r, sklep2_q3_r)
 sklep2_odch_sr_r <- przecietne_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts, sklep2_sr_r)
 sklep2_odch_med_r <- przecietne_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts, sklep2_med_r)
 sklep2_rozstep_r <- rozstep(sklep2_hist$breaks)
-sklep2_wsp_zmien_r <- wspolczynnik_zmiennosci(sklep2_sr_r, sklep2_odch_ob_r)
+sklep2_wsp_zmien_r <- wspolczynnik_zmiennosci(sklep2_odch_ob_r, sklep2_sr_r)
 sklep2_wsp_asym_r <- wspolczynnik_asymetrii_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts, sklep2_sr_r, sklep2_odch_ob_r)
 sklep2_skosn <- skosnosc(sklep2_sr_r, sklep2_med_r, sklep2_odch_ob_r)
 sklep2_kurt_r <- kurtoza_rozdzielczy(sklep2_hist$mids, sklep2_hist$counts, sklep2_sr_r, sklep2_odch_ob_r)
