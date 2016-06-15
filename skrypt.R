@@ -599,7 +599,7 @@ zad1opis <- c("srednia                            ",
               "Kurtoza                            ",
               "Eksces                             ")
 
-#wektory tworzace kolumny
+#wektory tworzace kolumny 
 S1_szczeg <- c(sklep1_sr ,sklep1_med ,sklep1_moda ,sklep1_q1 ,
                sklep1_q3 ,sklep1_war ,sklep1_war_nieob ,sklep1_odch ,
                sklep1_odch_nieob ,sklep1_cwart ,sklep1_przec_sred ,
