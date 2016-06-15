@@ -5,7 +5,7 @@ skosnosc <- function(sred, med, odch)
   return(skosn)
 }
 
-#Funkcja tworzaca wektor przedziałów dla histogramu
+#Funkcja tworzaca wektor przedziaĹ‚Ăłw dla histogramu
 #Do funkcji przekazujemy wektor danych
 przedzialy_histogramu <- function(vec)
 {
@@ -129,7 +129,7 @@ wariancja_obciazona <- function(vec, sr)
   return(w)
 }
 
-# war - wariancja obciążona
+# war - wariancja obciÄ…ĹĽona
 odchylenie_obciazone <- function(war)
 {
   o <- sqrt(war)
@@ -219,8 +219,8 @@ wspolczynnik_asymetrii <- function(vec, sr, odch)
 }
 
 # sr - srednia proby
-# odch - odchylenie standardowe próby
-# wsp_ufnosci - poziom ufności podany w treści
+# odch - odchylenie standardowe prĂłby
+# wsp_ufnosci - poziom ufnoĹ›ci podany w treĹ›ci
 przedzial_sredniej <- function(vec, sr, odch, wsp_ufnosci)
 {
   if(wsp_ufnosci > 1 || wsp_ufnosci < 0)
@@ -231,21 +231,21 @@ przedzial_sredniej <- function(vec, sr, odch, wsp_ufnosci)
   if(ile < 1)
     return("nie podano zadnych danych")
   
-  # Poziom istotności
+  # Poziom istotnoĹ›ci
   alfa <- 1 - wsp_ufnosci
   
-  # Różne wzory na podstawie ilości danych - http://wm.pollub.pl/files/77/content/files/3097_estymacja_przedzialowa.pdf
+  # RĂłĹĽne wzory na podstawie iloĹ›ci danych - http://wm.pollub.pl/files/77/content/files/3097_estymacja_przedzialowa.pdf
   if(ile <= 30)
   {
-    # Model II - nieznane odchylenie populacji, mała próba
-    # qt - kwantyl rozkładu t-Studenta
+    # Model II - nieznane odchylenie populacji, maĹ‚a prĂłba
+    # qt - kwantyl rozkĹ‚adu t-Studenta
     wart_t_lub_u <- qt(1 - (alfa / 2), ile - 1) * (odch / sqrt(ile - 1))
     
   }
   else
   {
-    # Model III - nieznane odchylenie populacji, duża próba
-    # qnorm - kwantyl rozkładu normalnego
+    # Model III - nieznane odchylenie populacji, duĹĽa prĂłba
+    # qnorm - kwantyl rozkĹ‚adu normalnego
     wart_t_lub_u <- qnorm(1 - (alfa / 2)) * (odch / sqrt(ile))
   }
   
@@ -253,7 +253,7 @@ przedzial_sredniej <- function(vec, sr, odch, wsp_ufnosci)
   return(przedzial)
 }
 
-# war - wariancja próby
+# war - wariancja prĂłby
 przedzial_odchylenia <- function(vec, war, wsp_ufnosci)
 {
   if(wsp_ufnosci > 1 || wsp_ufnosci < 0)
@@ -264,22 +264,22 @@ przedzial_odchylenia <- function(vec, war, wsp_ufnosci)
   if(ile < 1)
     return("nie podano zadnych danych")
   
-  # Poziom istotności
+  # Poziom istotnoĹ›ci
   alfa <- 1 - wsp_ufnosci
   
   if(ile <= 30)
   {
-    # Model I - nieznane odchylenie populacji, mała próba
-    # qchisq - kwantyl rozkładu chi-kwadrat 
+    # Model I - nieznane odchylenie populacji, maĹ‚a prĂłba
+    # qchisq - kwantyl rozkĹ‚adu chi-kwadrat 
     ns <- ile * war
     przedzial <- c(ns / qchisq(1 - (alfa / 2), ile - 1), ns / qchisq(alfa / 2, ile - 1))
     
-    # Przedział jest dla wariancji, więc pierwiastkujemy go
+    # PrzedziaĹ‚ jest dla wariancji, wiÄ™c pierwiastkujemy go
     przedzial <- sqrt(przedzial)
   }
   else
   {
-    # Model II - nieznane odchylenie populacji, duża próba
+    # Model II - nieznane odchylenie populacji, duĹĽa prĂłba
     odch <- sqrt(war)
     wart_u <- qnorm(1 - (alfa / 2)) / sqrt(2 * ile)
     przedzial <- c(odch / (1 + wart_u), odch / (1 - wart_u))
@@ -289,7 +289,7 @@ przedzial_odchylenia <- function(vec, war, wsp_ufnosci)
 }
 
 # przedzial - wektor przedzialu zawierajacy dwa elementy
-# wart_do_porownania - wartość do porównania precyzji, np. wyliczona średnia
+# wart_do_porownania - wartoĹ›Ä‡ do porĂłwnania precyzji, np. wyliczona Ĺ›rednia
 precyzja_wzgledna <- function(przedzial, wart_do_porownania)
 {
   ile <- length(przedzial)
@@ -297,7 +297,7 @@ precyzja_wzgledna <- function(przedzial, wart_do_porownania)
   if(ile != 2)
     return("niepoprawny wektor przedzialu")
   
-  # Odejmujemy dolną wartość przedziału od górnej
+  # Odejmujemy dolnÄ… wartoĹ›Ä‡ przedziaĹ‚u od gĂłrnej
   blad_maksymalny <- (przedzial[2] - przedzial[1]) / 2
   precyzja <- (blad_maksymalny / wart_do_porownania) * 100
   
@@ -309,9 +309,9 @@ precyzja_wzgledna <- function(przedzial, wart_do_porownania)
     return(sprintf("%f%% jest wieksze od 10%%, wiec nalezy odrzucic teze, ze istnieja podstawy do uogolnienia", precyzja))
 }
 
-# vec/sr/war/war_nieob - wektor/średnia/wariancja obciążona/ wariancja nieobciążona prób 1 i 2
-# alfa - poziom istotności podany w treści (alfa)
-# Można również użyć t.test(dane_sklepu1_vec, dane_sklepu2_vec, alternative="greater", var.equal=[TRUE|FALSE], conf.level = 0.95)
+# vec/sr/war/war_nieob - wektor/Ĺ›rednia/wariancja obciÄ…ĹĽona/ wariancja nieobciÄ…ĹĽona prĂłb 1 i 2
+# alfa - poziom istotnoĹ›ci podany w treĹ›ci (alfa)
+# MoĹĽna rĂłwnieĹĽ uĹĽyÄ‡ t.test(dane_sklepu1_vec, dane_sklepu2_vec, alternative="greater", var.equal=[TRUE|FALSE], conf.level = 0.95)
 test_dwoch_srednich <- function(vec1, vec2, sr1, sr2, war1, war2, war1_nieob, war2_nieob, alfa)
 {
   ile1 <- length(vec1)
@@ -319,49 +319,49 @@ test_dwoch_srednich <- function(vec1, vec2, sr1, sr2, war1, war2, war1_nieob, wa
   ile1bez1 <- ile1 - 1
   ile2bez1 <- ile2 - 1
   
-  # Najpierw testujemy równość wariancji populacji
-  # H0 - są równe
-  # H1 - wariancje są różne
+  # Najpierw testujemy rĂłwnoĹ›Ä‡ wariancji populacji
+  # H0 - sÄ… rĂłwne
+  # H1 - wariancje sÄ… rĂłĹĽne
   # Korzystamy ze statystyki F-Snedecora
   f <- war1_nieob / war2_nieob
   wart_f <- qf(1 - alfa / 2, ile1 - 1, ile2 - 1)
   
-  # Gdy wartość statystyki jest większa od górnej granicy przedziału, nie mamy podstaw do odrzucenia hipotezy, w przeciwnym wypadku odrzucamy
+  # Gdy wartoĹ›Ä‡ statystyki jest wiÄ™ksza od gĂłrnej granicy przedziaĹ‚u, nie mamy podstaw do odrzucenia hipotezy, w przeciwnym wypadku odrzucamy
   if(f < wart_f)
   {
     ile1i2bez2 <- ile1 + ile2 - 2
     
-    # Test t-Studenta dla grup niezależnych o równej wariancji - http://www-users.mat.umk.pl/~gemini/2mieStat/2012/testy_teoria.pdf
+    # Test t-Studenta dla grup niezaleĹĽnych o rĂłwnej wariancji - http://www-users.mat.umk.pl/~gemini/2mieStat/2012/testy_teoria.pdf
     t <- (sr1 - sr2) / sqrt(((war1 * ile1bez1 + war2 * ile2bez1) * (ile1 + ile2)) / (ile1i2bez2 * ile1 * ile2))
     
     # Liczba stopni swobody przy odczycie - n1 + n2 - 2
     wart_t <- qt(1 - alfa, ile1i2bez2)
     
-    # Gdy wartość jest mniejsza od dolnej granicy przedziału, nie ma podstaw do odrzucenia hipotezy
+    # Gdy wartoĹ›Ä‡ jest mniejsza od dolnej granicy przedziaĹ‚u, nie ma podstaw do odrzucenia hipotezy
     if(t <= wart_t)
-      h <- "Wartosc nie nalezy do przedzialu - przyjmujemy hipoteze zerowa - wartości przeciętne sa rowne."
+      h <- "Wartosc nie nalezy do przedzialu - przyjmujemy hipoteze zerowa - wartoĹ›ci przeciÄ™tne sa rowne."
     else
-      h <- "Wartosc nalezy do przedzialu - odrzucamy hipoteze zerowa - wartość przeciętna pierwszego sklepu jest wieksza."
+      h <- "Wartosc nalezy do przedzialu - odrzucamy hipoteze zerowa - wartoĹ›Ä‡ przeciÄ™tna pierwszego sklepu jest wieksza."
     
-    return(sprintf("rowne odchylenia populacji, wiec: statystyka t = %f, przedzial <%f, ∞). %s", t, wart_t, h))
+    return(sprintf("rowne odchylenia populacji, wiec: statystyka t = %f, przedzial <%f, âž). %s", t, wart_t, h))
   }
   else
   {
     war_ile1 <- war1 / ile1
     war_ile2 <- war2 / ile2
     
-    # Statystyka Cochrana-Coxa, gdyż odchylenia są różne
+    # Statystyka Cochrana-Coxa, gdyĹĽ odchylenia sÄ… rĂłĹĽne
     C <- (sr1 - sr2) / sqrt(war_ile1 + war_ile2)
     
-    # Wzór Cochrana-Coxa
+    # WzĂłr Cochrana-Coxa
     wart_C <- (war_ile1 * qt(1 - alfa, ile1bez1) + war_ile2 * qt(1 - alfa, ile2bez1)) / (war_ile1 + war_ile2)
     
     if(C <= wart_C)
-      h <- "Wartosc nie nalezy do przedzialu - przyjmujemy hipoteze zerowa - wartości przeciętne sa rowne."
+      h <- "Wartosc nie nalezy do przedzialu - przyjmujemy hipoteze zerowa - wartoĹ›ci przeciÄ™tne sa rowne."
     else
-      h <- "Wartosc nalezy do przedzialu - odrzucamy hipoteze zerowa - wartość przeciętna pierwszego sklepu jest wieksza."
+      h <- "Wartosc nalezy do przedzialu - odrzucamy hipoteze zerowa - wartoĹ›Ä‡ przeciÄ™tna pierwszego sklepu jest wieksza."
     
-    return(sprintf("rozne odchylenia populacji, wiec: statystyka C = %f, przedzial <%f, ∞). %s", C, wart_C, h))
+    return(sprintf("rozne odchylenia populacji, wiec: statystyka C = %f, przedzial <%f, âž). %s", C, wart_C, h))
   }
 }
 
@@ -375,23 +375,23 @@ test_kolmogorowa <- function(vec, sr, odch)
   # Fn(vec i)
   dystr_emp <- 1:ile / ile
   
-  # Wartość statystyki ze wzoru
+  # WartoĹ›Ä‡ statystyki ze wzoru
   wart_kryt <- 0.881 / sqrt(ile)
   
-  # Wartość statystyki
+  # WartoĹ›Ä‡ statystyki
   dn = max(abs(dystr_emp - dystr_rozk_norm))
   
   if(dn <= wart_kryt || dn >= 1)
-    return("brak podstaw do odrzucenia hipotezy zerowej - rozkład jest normalny.")
+    return("brak podstaw do odrzucenia hipotezy zerowej - rozkĹ‚ad jest normalny.")
   else
-    return("odrzucamy hipotezę zerową - rozkład nie jest normalny.")
+    return("odrzucamy hipotezÄ™ zerowÄ… - rozkĹ‚ad nie jest normalny.")
 }
 
-# Wczytanie danych z plików
+# Wczytanie danych z plikĂłw
 dane_sklepu_1 <- read.table("sklep1.txt", header=F, dec=",")
 dane_sklepu_2 <- read.table("sklep2.txt", header=F, dec=",")
 
-# Przekształcenie ich do posortowanych wektorów
+# PrzeksztaĹ‚cenie ich do posortowanych wektorĂłw
 dane_sklepu1_vec <- sort(c(dane_sklepu_1[[1]]))
 dane_sklepu2_vec <- sort(c(dane_sklepu_2[[1]]))
 
@@ -399,7 +399,7 @@ dane_sklepu2_vec <- sort(c(dane_sklepu_2[[1]]))
 sklep1_hist <- hist(dane_sklepu1_vec, breaks = przedzialy_histogramu(dane_sklepu1_vec))
 sklep2_hist <- hist(dane_sklepu2_vec, breaks = przedzialy_histogramu(dane_sklepu2_vec))
 
-# Szeregi szczegółowe
+# Szeregi szczegĂłĹ‚owe
 sklep1_sr <- mean(dane_sklepu1_vec)
 sklep1_med <- median(dane_sklepu1_vec)
 sklep1_q1 <- quantile(dane_sklepu1_vec, 0.25)
@@ -500,7 +500,7 @@ wynik_testu <- test_dwoch_srednich(dane_sklepu1_vec, dane_sklepu2_vec, sklep1_sr
 #formatowanie
 
 #zaokraglanie liczb, aby zmiescily sie w odpowiednich kolumnach
-# Szeregi szczegółowe
+# Szeregi szczegĂłĹ‚owe
 sklep1_sr <- round(sklep1_sr,3)
 sklep1_med <- round(sklep1_med,3)
 if(sklep1_moda != "Brak") sklep1_moda <- round(sklep1_moda,3)
@@ -630,8 +630,8 @@ S2_rozdz <- c(sklep2_sr_r ,sklep2_med_r ,sklep2_moda_r , paste(sklep2_q1_r) ,
 
 zad1 <- data.frame(opis = zad1opis, S1_szczeg, S2_szczeg,S1_rozdz,S2_rozdz)
 
-zad2 <-  c(paste("Wynik testu Kolmogorowa - Lillieforse'a dla zestawu danych sklepu 1 (H0 - podane dane mają rozkład normalny H1 - nie mają): ",  wynik_kolmogorowa_1),
-           paste("Wynik testu Kolmogorowa - Lillieforse'a dla zestawu danych sklepu 2 (H0 - podane dane mają rozkład normalny H1 - nie mają): ",  wynik_kolmogorowa_2))
+zad2 <-  c(paste("Wynik testu Kolmogorowa - Lillieforse'a dla zestawu danych sklepu 1 (H0 - podane dane majÄ… rozkĹ‚ad normalny H1 - nie majÄ…): ",  wynik_kolmogorowa_1),
+           paste("Wynik testu Kolmogorowa - Lillieforse'a dla zestawu danych sklepu 2 (H0 - podane dane majÄ… rozkĹ‚ad normalny H1 - nie majÄ…): ",  wynik_kolmogorowa_2))
 
 zad3 <-  c(paste("Przedzial sredniej: (", sklep1_przedzial_sredniej[1]," , ", sklep1_przedzial_sredniej[2], ")"),
            paste("Precyzja wzgledna: ", sklep1_precyzja_wzgledna))
