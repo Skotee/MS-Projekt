@@ -321,13 +321,14 @@ test_dwoch_srednich <- function(vec1, vec2, sr1, sr2, war1, war2, war1_nieob, wa
   
   # Najpierw testujemy równość wariancji populacji
   # H0 - są równe
-  # H1 - wariancje są różne
+  # H1 - wariancja pierwszego sklepu jest mniejsza
   # Korzystamy ze statystyki F-Snedecora
   f <- war1_nieob / war2_nieob
-  wart_f <- qf(1 - alfa / 2, ile1 - 1, ile2 - 1)
+  wart_f <- qf(1 - alfa, ile1 - 1, ile2 - 1)
+  wynik_f <- sprintf("statystyka F = %f, przedział (-∞, %f)", f, wart_f)
   
-  # Gdy wartość statystyki jest większa od górnej granicy przedziału, nie mamy podstaw do odrzucenia hipotezy, w przeciwnym wypadku odrzucamy
-  if(f < wart_f)
+  # Gdy wartość statystyki jest mniejsza od dolnej granicy przedziału odrzucamy hipotezę zerową, w przeciwnym wypadku nie mamy podstaw do odrzucenia
+  if(f >= wart_f)
   {
     ile1i2bez2 <- ile1 + ile2 - 2
     
@@ -337,13 +338,13 @@ test_dwoch_srednich <- function(vec1, vec2, sr1, sr2, war1, war2, war1_nieob, wa
     # Liczba stopni swobody przy odczycie - n1 + n2 - 2
     wart_t <- qt(1 - alfa, ile1i2bez2)
     
-    # Gdy wartość jest mniejsza od dolnej granicy przedziału, nie ma podstaw do odrzucenia hipotezy
-    if(t <= wart_t)
-      h <- "Wartosc nie nalezy do przedzialu - przyjmujemy hipoteze zerowa - wartości przeciętne sa rowne."
+    # Gdy wartość jest większa od górnej granicy przedziału, nie ma podstaw do odrzucenia hipotezy
+    if(t >= -wart_t)
+      h <- "Wartość nie należy do przedziału - przyjmujemy hipotezę zerową - wartości przeciętne sa rowne."
     else
-      h <- "Wartosc nalezy do przedzialu - odrzucamy hipoteze zerowa - wartość przeciętna pierwszego sklepu jest wieksza."
+      h <- "Wartość należy do przedziału - odrzucamy hipotezę zerową - wartość przeciętna drugiego sklepu jest większa."
     
-    return(sprintf("rowne odchylenia populacji, wiec: statystyka t = %f, przedzial <%f, ∞). %s", t, wart_t, h))
+    return(sprintf("równe wariancje populacji [%s, przyjmujemy hipotezę zerową o równości], więc: statystyka t = %f, obszar krytyczny (-∞, -%f). %s", wynik_f, t, wart_t, h))
   }
   else
   {
@@ -356,12 +357,12 @@ test_dwoch_srednich <- function(vec1, vec2, sr1, sr2, war1, war2, war1_nieob, wa
     # Wzór Cochrana-Coxa
     wart_C <- (war_ile1 * qt(1 - alfa, ile1bez1) + war_ile2 * qt(1 - alfa, ile2bez1)) / (war_ile1 + war_ile2)
     
-    if(C <= wart_C)
-      h <- "Wartosc nie nalezy do przedzialu - przyjmujemy hipoteze zerowa - wartości przeciętne sa rowne."
+    if(C >= -wart_C)
+      h <- "Wartość nie należy do przedziału - przyjmujemy hipotezę zerową - wartości przeciętne sa równe."
     else
-      h <- "Wartosc nalezy do przedzialu - odrzucamy hipoteze zerowa - wartość przeciętna pierwszego sklepu jest wieksza."
+      h <- "Wartość należy do przedziału - odrzucamy hipotezę zerową - wartość przeciętna pierwszego sklepu jest większa."
     
-    return(sprintf("rozne odchylenia populacji, wiec: statystyka C = %f, przedzial <%f, ∞). %s", C, wart_C, h))
+    return(sprintf("różne wariancje populacji [%s, odrzucamy hipotezę zerową o równości], więc: statystyka C = %f, obszar krytyczny (-∞, -%f). %s", wynik_f, C, wart_C, h))
   }
 }
 
@@ -381,18 +382,14 @@ test_kolmogorowa <- function(vec, sr, odch)
   # Wartość statystyki
   dn = max(abs(dystr_emp - dystr_rozk_norm))
   
-  cat("wart kryt:")
-  cat(wart_kryt)
-  cat("dn:")
-  cat(dn)
-  
-  if(dn <= wart_kryt || dn >= 1)
+  if(dn < wart_kryt || dn > 1)
     return("brak podstaw do odrzucenia hipotezy zerowej - rozkład jest normalny.")
   else
     return("odrzucamy hipotezę zerową - rozkład nie jest normalny.")
 }
 
 # Wczytanie danych z plików
+# setwd("sciezka") gdy nie wczytują się pliki
 dane_sklepu_1 <- read.table("sklep1.txt", header=F, dec=",")
 dane_sklepu_2 <- read.table("sklep2.txt", header=F, dec=",")
 
@@ -485,7 +482,7 @@ sklep2_eksc_r <- eksces(sklep2_kurt_r)
 
 # Zad 2
 
-wynik_kolmogorowa_1 <- test_kolmogorowa(dane_sklepu1_vec, sklep1_sr, sklep1_odch)
+wynik_kolmogorowa_1 <- test_kolmogorowa(dane_sklepu2_vec, sklep2_sr, sklep2_odch)
 wynik_kolmogorowa_2 <- test_kolmogorowa(dane_sklepu2_vec, sklep2_sr, sklep2_odch)
 
 # Zad 3
@@ -646,7 +643,7 @@ zad4 <-  c(paste( "Przedzial odchylenia: (" , sklep2_przedzial_odchylenia[1] , "
 
 zad5 <-  c("Czy na poziomie istotnosci 0.05 mozna twierdzic, ze wartosc miesiecznych wydatkow, na jedna osobe, na pieczywo i produkty zbozowe sa wieksze dla klientow pierwszego marketu (sformulowac i zweryfikowac odpowiednia hipoteze)?",
            "H0 - m1 = m2",
-           "H1 - m1 > m2",
+           "H1 - m1 < m2",
            paste("Wynik testu: ", wynik_testu))
 
 
