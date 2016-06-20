@@ -382,6 +382,11 @@ test_kolmogorowa <- function(vec, sr, odch)
   # Wartość statystyki
   dn = max(abs(dystr_emp - dystr_rozk_norm))
   
+  cat("wart kryt:")
+  cat(wart_kryt)
+  cat("dn:")
+  cat(dn)
+  
   if(dn < wart_kryt || dn > 1)
     return("brak podstaw do odrzucenia hipotezy zerowej - rozkład jest normalny.")
   else
@@ -482,7 +487,7 @@ sklep2_eksc_r <- eksces(sklep2_kurt_r)
 
 # Zad 2
 
-wynik_kolmogorowa_1 <- test_kolmogorowa(dane_sklepu2_vec, sklep2_sr, sklep2_odch)
+wynik_kolmogorowa_1 <- test_kolmogorowa(dane_sklepu1_vec, sklep1_sr, sklep1_odch)
 wynik_kolmogorowa_2 <- test_kolmogorowa(dane_sklepu2_vec, sklep2_sr, sklep2_odch)
 
 # Zad 3
